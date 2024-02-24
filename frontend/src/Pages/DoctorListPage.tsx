@@ -10,9 +10,6 @@ const DoctorListPage: React.FC = () => {
             <div>
                 <DoctorList doctors = {data} />
             </div>
-            <div>
-                
-            </div>
         </>
     );
 }
