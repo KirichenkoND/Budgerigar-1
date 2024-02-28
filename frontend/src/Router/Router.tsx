@@ -4,6 +4,7 @@ import PatientListPage from '../Pages/PatientListPage';
 import DoctorListPage from '../Pages/DoctorListPage';
 import AuthPage from '../Pages/AuthPage';
 import EditorPage from '../Pages/EditorPage';
+import TestComponentPage from '../Pages/TestComponentPage';
 
 import NotFound from '../components/NotFound/NotFound';
 
@@ -17,6 +18,7 @@ const Router = () => {
                     <Route path="/doctors" element={<DoctorListPage />} />
                     <Route path='/auth' element={<AuthPage />} />
                     <Route path='/editor' element={<EditorPage />} />
+                    <Route path='/test' element={<TestComponentPage />} />
 
                     <Route path='*' element={<NotFound message="404 Not Found" />} />
                 </Routes>
