@@ -1,8 +1,14 @@
 import React from 'react';
 import "./Input.scss";
-const Input = () => {
+
+interface InputProps {
+    type: string;
+    styleName: string;
+}
+
+const Input: React.FC<InputProps> = ({type = "text", styleName = "default_input"}) => {
     return (
-        <input />
+        <input type={type} className={styleName}/>
     );
 };
 

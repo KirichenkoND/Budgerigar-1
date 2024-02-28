@@ -1,0 +1,19 @@
+.default_btn {
+    align-items: center;
+    justify-content: center;
+
+    margin: 5px 5px 5px 5px;
+
+    font-size: 16px;
+    padding: 5px 15px;
+    border: 2px solid #8a8a8a;
+    border-radius: 5px;
+    color: #8a8a8a;
+    background-color: #fff;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.default_btn:hover {
+    background-color: #8a8a8a;
+    color: #fff;
+}
