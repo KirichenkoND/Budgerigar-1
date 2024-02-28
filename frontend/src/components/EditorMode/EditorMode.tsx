@@ -1,4 +1,21 @@
+import Input from '../../UI/Input/Input';
 
+const PatientFields = [
+    { label: "Фамилия:", type: "text" },
+    { label: "Имя:", type: "text" },
+    { label: "Отчество:", type: "text" },
+    { label: "Дата рождения:", type: "text" },
+]
+
+const doctorFields = [
+    { label: "Фамилия:", type: "text" },
+    { label: "Имя:", type: "text" },
+    { label: "Отчество:", type: "text" },
+    { label: "Дата рождения:", type: "text" },
+    { label: "Категория:", type: "text" },
+    { label: "Специализация:", type: "text" },
+    { label: "Стаж:", type: "text" },
+];
 
 export const EditorMode: React.FC = () => {
     return (
@@ -7,59 +24,31 @@ export const EditorMode: React.FC = () => {
             <div>
                 Новый пациент
                 <ul>
-                    <li>
-                        <label>Фамилия:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Имя:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Отчество:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Дата рождения:</label>
-                        <input type="text"></input>
-                    </li>
+                    {
+                        PatientFields.map((field, index) => (
+                            <li key={index}>
+                                <label>{field.label}</label>
+                                <Input />
+                            </li>
+                        ))
+                    }
                 </ul>
             </div>
 
             <div>
                 Новый Врач
                 <ul>
-                    <li>
-                        <label>Фамилия:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Имя:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Отчество:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Дата рождения:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Категория:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Специализация:</label>
-                        <input type="text"></input>
-                    </li>
-                    <li>
-                        <label>Стаж:</label>
-                        <input type="text"></input>
-                    </li>
+                    {
+                        doctorFields.map((field, index) => (
+                            <li key={index}>
+                                <label>{field.label}</label>
+                                <Input />
+                            </li>
+                        ))
+                    }
                 </ul>
             </div>
-            
+
         </>
     )
 }
