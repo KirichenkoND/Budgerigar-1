@@ -4,11 +4,13 @@ import "./Button.scss";
 interface ButtonProps {
     text: string;
     styleName?: string;
+    onClick?: () => void;
+    disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ text = "ТЫКНИ", styleName = 'default_btn' }) => {
+const Button: React.FC<ButtonProps> = ({ text = "ТЫКНИ", styleName = 'default_btn', ...OtherFields }) => {
     return (
-        <button className={styleName}>
+        <button className={styleName} {...OtherFields}>
             {text}
         </button>
     );
