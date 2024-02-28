@@ -12,12 +12,6 @@
     transform: translate(-50%, -50%);
 }
 
-
-.login,
-.password {
-    margin-bottom: 20px;
-}
-
 label {
     display: block;
     margin-bottom: 5px;
@@ -29,33 +23,4 @@ label {
     position: relative;
 }
 
-input[type="login"],
-input[type="password"] {
-    width: calc(100% - 30px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-}
 
-input[type="login"]:focus,
-input[type="password"]:focus {
-    border-color: #007bff;
-}
-
-button.auth {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button.login:hover {
-    background-color: #0056b3;
-}

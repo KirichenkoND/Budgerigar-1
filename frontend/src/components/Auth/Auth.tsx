@@ -1,4 +1,6 @@
 import React from 'react';
+import Button from '../../UI/Button/Button'
+import Input from '../../UI/Input/Input'
 
 import './Auth.scss'
 
@@ -7,18 +9,18 @@ const Auth: React.FC = () => {
         <>
             <div className="container">
                 <div className="login">
-                    <label htmlFor="login">Логин</label>
+                <label>Логин</label>
                     <div className="sec-2">
-                        <input type="login" name="login" placeholder="example@example.com" />
+                        <Input type="login" styleName="auth_input" placeholder="Ivanova_m1" />
                     </div>
                 </div>
                 <div className="password">
-                    <label htmlFor="password">Пароль</label>
+                    <label>Пароль</label>
                     <div className="sec-2">
-                        <input type="password" name="password" placeholder="************" />
+                        <Input type="password" styleName="auth_input" placeholder="************" />
                     </div>
                 </div>
-                <button className="auth">Авторизоваться</button>
+                <Button text="Авторизоваться" styleName="auth_btn" />
             </div>
         </>
     );
