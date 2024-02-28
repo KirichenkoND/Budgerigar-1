@@ -3,10 +3,10 @@ import "./Button.scss";
 
 interface ButtonProps {
     text: string;
-    styleName: string;
+    styleName?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ text = "ТЫК", styleName = 'default_btn' }) => {
+const Button: React.FC<ButtonProps> = ({ text = "ТЫКНИ", styleName = 'default_btn' }) => {
     return (
         <button className={styleName}>
             {text}
