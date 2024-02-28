@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import DoctorCard from './DoctorCard';
 import Popup from '../Popup/Popup';
 
+import './DoctorList.scss'
+import Button from '../../UI/Button/Button';
+
 interface DoctorListProps {
   doctors: {
     id: number;
@@ -33,7 +36,7 @@ const DoctorList: React.FC<DoctorListProps> = ({ doctors }) => {
   } | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const doctorsPerPage = 5;
+  const doctorsPerPage = 2;
   const indexOfLastDoctor = currentPage * doctorsPerPage;
   const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
   const currentDoctors = doctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
@@ -59,30 +62,18 @@ const DoctorList: React.FC<DoctorListProps> = ({ doctors }) => {
   return (
     <div className="doctor-list">
       <h2>Список врачей</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ФИО</th>
-            <th>Категория</th>
-            <th>Опыт работы</th>
-            <th>Специализация</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentDoctors.map((doctor, index) => (
-            <tr key={index} onClick={() => handleDoctorClick(doctor)}>
-              <td>{doctor.name}</td>
-              <td>{doctor.category}</td>
-              <td>{doctor.experience}</td>
-              <td>{doctor.specialization}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+      <div className="doctor-cards-container">
+        {currentDoctors.map((doctor, index) => (
+          <div className="doctor-card" key={index} onClick={() => handleDoctorClick(doctor)}>
+            <DoctorCard {...doctor} />
+          </div>
+        ))}
+      </div>
+
+      <div className="pagination">
+        <Button text="Previous" onClick={prevPage} disabled={currentPage === 1} />
         <span>{currentPage} / {totalPages}</span>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
+        <Button text="Next" onClick={nextPage} disabled={currentPage === totalPages} />
       </div>
       <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
         {selectedDoctor && <DoctorCard {...selectedDoctor} />}

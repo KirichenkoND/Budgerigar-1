@@ -1,0 +1,26 @@
+.doctor-cards-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  .doctor-card {
+    width: calc(80% - 20px);
+    margin: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  .pagination {
+    margin-top: 20px;
+    justify-content: center;
+  }
+  
+  .selected-doctor {
+    margin-top: 20px;
+  }
+  

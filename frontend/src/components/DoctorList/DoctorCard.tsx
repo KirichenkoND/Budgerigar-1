@@ -15,7 +15,7 @@ interface DoctorCardProps {
 
 const DoctorCard: React.FC<DoctorCardProps> = ({ id, name, category, experience, age, specialization, area, schedule, office, appointmentSchedule }) => {
     return (
-        <div className="doctor-card">
+        <div>
             <h2>{name}</h2>
             <p>Категория: {category}</p>
             <p>Опыт работы: {experience}</p>
