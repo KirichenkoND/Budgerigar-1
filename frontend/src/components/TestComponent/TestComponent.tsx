@@ -52,6 +52,16 @@ export const TestComponent: React.FC = () => {
                                     >
                                         55 лет
                                     </span>
+                                    <span color="#263479" className="sc-chPdSV chQZVy">
+                                        Номер договора
+                                    </span>
+                                    <span
+                                        color="#FFFFFF"
+                                        id="profile_select_birth_date"
+                                        className="sc-eNQAEJ ffbiLu"
+                                    >
+                                        ABCDEFR
+                                    </span>
                                 </div>
 
                             </div>
