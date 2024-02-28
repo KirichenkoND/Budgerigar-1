@@ -118,6 +118,13 @@
 }
 
 
+/*.MedicalContainer {
+    display: grid;
+    grid-template-columns: 444px 444px;
+    gap: 20px;
+    place-content: center;
+}*/
+
 .MedicalCardsMain {
     display: grid;
     grid-template-columns: 444px 444px;
@@ -226,4 +233,3 @@
     justify-content: flex-start;
     flex: 1 1 0%;
 }
-

@@ -58,18 +58,18 @@ export const TestComponent: React.FC = () => {
 
                         </div>
 
-
-                        <div className='MedicalCardsMain'>
-                            <div className='MedicalCards'>
-                                <MiniCards /><MiniCards /><MiniCards />
+                        <div className="MedicalContainer">
+                            <div className='MedicalCardsMain'>
+                                <div className='MedicalCards'>
+                                    <MiniCards /><MiniCards /><MiniCards />
+                                </div>
+                            </div>
+                            <div className='MedicalCardsMain'>
+                                <div className='MedicalCards'>
+                                    <MiniCards /><MiniCards /><MiniCards />
+                                </div>
                             </div>
                         </div>
-                        <div className='MedicalCardsMain'>
-                            <div className='MedicalCards'>
-                                <MiniCards /><MiniCards /><MiniCards />
-                            </div>
-                        </div>
-
 
                     </div>
                 </div>
