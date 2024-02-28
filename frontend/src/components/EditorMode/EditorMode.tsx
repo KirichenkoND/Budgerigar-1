@@ -1,4 +1,7 @@
 import Input from '../../UI/Input/Input';
+import Button from '../../UI/Button/Button';
+import './EditorMode.scss'
+import React, { useState } from 'react';
 
 const PatientFields = [
     { label: "Фамилия:", type: "text" },
@@ -18,37 +21,38 @@ const doctorFields = [
 ];
 
 export const EditorMode: React.FC = () => {
+    const [isRegistratorMode, setisRegistratorMode] = useState(true);
+
+    const toggleMode = () => {
+        setisRegistratorMode(!isRegistratorMode);
+    }
     return (
         <>
+            <div className='EditorContainer'>
+                <input type="checkbox" checked={isRegistratorMode} onChange={toggleMode} />
+                <div className='EditorFields'>
+                    {isRegistratorMode ? "Новый пациент" : "Новый врач"}
+                    <ul>
+                        {
+                            isRegistratorMode ?
+                                PatientFields.map((field, index) => (
+                                    <li key={index}>
+                                        <label>{field.label}</label>
+                                        <Input type={field.type} />
+                                    </li>
+                                )) :
+                                doctorFields.map((field, index) => (
+                                    <li key={index}>
+                                        <label>{field.label}</label>
+                                        <Input type={field.type} />
+                                    </li>
+                                ))
 
-            <div>
-                Новый пациент
-                <ul>
-                    {
-                        PatientFields.map((field, index) => (
-                            <li key={index}>
-                                <label>{field.label}</label>
-                                <Input />
-                            </li>
-                        ))
-                    }
-                </ul>
+                        }
+                        <Button text="Добавить" />
+                    </ul>
+                </div>
             </div>
-
-            <div>
-                Новый Врач
-                <ul>
-                    {
-                        doctorFields.map((field, index) => (
-                            <li key={index}>
-                                <label>{field.label}</label>
-                                <Input />
-                            </li>
-                        ))
-                    }
-                </ul>
-            </div>
-
         </>
     )
 }
