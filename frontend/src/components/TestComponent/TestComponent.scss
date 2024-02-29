@@ -46,27 +46,7 @@
     width: 156px;
 }
 
-.dghTSH {
-    display: flex;
-    flex-direction: column;
-    -webkit-box-align: stretch;
-    align-items: stretch;
-    margin: 0px;
-    padding: 0px;
-    border: none;
-    border-radius: 0px;
-    background-color: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    text-align: left;
-    outline: none;
-    cursor: pointer;
-    appearance: none;
-    user-select: none;
-}
-
-.dghTSH {
+.profileButton {
     display: flex;
     flex-direction: column;
     -webkit-box-align: stretch;
@@ -118,19 +98,19 @@
 }
 
 
-/*.MedicalContainer {
-    display: grid;
-    grid-template-columns: 444px 444px;
-    gap: 20px;
-    place-content: center;
-}*/
-
-.MedicalCardsMain {
+.MedicalContainer {
     display: grid;
     grid-template-columns: 444px 444px;
     gap: 20px;
     place-content: center;
 }
+
+/*.MedicalCardsMain {
+    display: grid;
+    grid-template-columns: 444px 444px;
+    gap: 20px;
+    place-content: center;
+}*/
 
 .MedicalCards {
     display: flex;

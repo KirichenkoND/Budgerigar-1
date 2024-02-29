@@ -16,23 +16,22 @@ export const TestComponent: React.FC = () => {
                         <div className='MedicalAside'>
                             <div className='Userinform'>
                                 <div className="profile_select_container">
-                                    <button type="button" className="dghTSH">
+                                    <button type="button" className="profileButton">
                                         <img src={useravatar} />
                                     </button>
 
                                     <div className="sc-ifAKCX EANAk" />
-                                    <div id="profile_select_name" className="sc-bwzfXH sc-jrOYZv lnEaOP">
+                                    <div className="sc-bwzfXH sc-jrOYZv lnEaOP">
                                         <span className="sc-jzJRlG sc-fQfKYo cfDcIS">Иван</span>
                                         <span className="sc-jzJRlG sc-fQfKYo cfDcIS">Иванович И.</span>
                                     </div>
                                     <div className="sc-ifAKCX fVODKB" />
                                     <div className="sc-gIjDWZ dxzocw">
                                         <button
-                                            id="profile_select_open_button"
                                             type="button"
-                                            className="sc-bdVaJa dghTSH"
+                                            className="sc-bdVaJa profileButton"
                                         ></button>
-                                        <div id="profile_list_container" className="sc-kwclOP fLyoFE" />
+                                        <div className="sc-kwclOP fLyoFE" />
                                     </div>
                                     <div className="sc-ifAKCX fwMRKw" />
                                     <span color="#263479" className="sc-chPdSV chQZVy">
