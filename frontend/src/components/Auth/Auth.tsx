@@ -9,13 +9,13 @@ const Auth: React.FC = () => {
         <>
             <div className="container">
                 <div className="login">
-                    <label>Логин</label>
+                    <label className='label_auth'>Логин</label>
                     <div className="sec-2">
                         <Input type="login" styleName="auth_input" placeholder="Ivanova_m1" />
                     </div>
                 </div>
                 <div className="password">
-                    <label>Пароль</label>
+                    <label className='label_auth'>Пароль</label>
                     <div className="sec-2">
                         <Input type="password" styleName="auth_input" placeholder="************" />
                     </div>
