@@ -1,45 +1,50 @@
-import { FC } from 'react';
-import HeaderLink from '../HeaderLink/HeaderLink';
-import "./Header.scss"
+import { FC } from "react";
+import HeaderLink from "../HeaderLink/HeaderLink";
+import "./Header.scss";
+import Button from "../../UI/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 const HeaderLinks = [
-    {
-        text: 'Home',
-        path: '/home',
-    },
-    {
-        text: 'Пациенты',
-        path: '/patients',
-    },
-    {
-        text: 'Докторы',
-        path: '/doctors',
-    },
-]
+  {
+    text: "Главная",
+    path: "/main",
+  },
+  {
+    text: "Пациенты",
+    path: "/patients",
+  },
+  {
+    text: "Докторы",
+    path: "/doctors",
+  },
+];
 
 export const Header: FC = () => {
-    return (
-        <>
-            <header>
-                <div className='header'>
-                    <div className='header-logo'>LOGO</div>
-                    <div className='header-links'>
-                        {
-                            HeaderLinks.map((headerLink, i) => {
-                                return (
-                                    <HeaderLink
-                                        key={i}
-                                        text={headerLink.text}
-                                        path={headerLink.path}
-                                    />
-                                )
-                            })
-                        }
-                    </div>
-                </div>
-            </header>
+  return (
+    <>
+      <header>
+        <div className="header">
+          <div className="header-logo">LOGO</div>
+          <div className="header-links">
+            {HeaderLinks.map((headerLink, i) => {
+              return (
+                <HeaderLink
+                  key={i}
+                  text={headerLink.text}
+                  path={headerLink.path}
+                />
+              );
+            })}
+          </div>
+          <div className="auth-button">
+            <a href="/auth">
+              <Button text={"Войти"} />
+            </a>
+          </div>
+        </div>
+      </header>
 
-            {/* <Navbar fixed="top" collapseOnSelect expand="md" bg="light" variant="light">
+      {/* <Navbar fixed="top" collapseOnSelect expand="md" bg="light" variant="light">
                 <Container>
                     <Navbar.Brand href='/'>
                         <img
@@ -61,6 +66,6 @@ export const Header: FC = () => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar> */}
-        </>
-    )
-}
+    </>
+  );
+};
