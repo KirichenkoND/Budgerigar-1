@@ -17,6 +17,10 @@ const HeaderLinks = [
     text: "Докторы",
     path: "/doctors",
   },
+  {
+    text: "Сотрудники",
+    path: "/editor",
+  }
 ];
 
 export const Header: FC = () => {

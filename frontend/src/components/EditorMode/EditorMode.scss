@@ -7,3 +7,15 @@
         list-style-type: none;
     }
 }
+
+ul {
+    padding: 0;
+}
+
+.switcher-buttons {
+    display: flex;
+    flex-direction: column;
+}
+.user-name {
+    margin-right: 5px;
+}
