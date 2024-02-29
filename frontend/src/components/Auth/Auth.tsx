@@ -9,7 +9,7 @@ const Auth: React.FC = () => {
         <>
             <div className="container">
                 <div className="login">
-                <label>Логин</label>
+                    <label>Логин</label>
                     <div className="sec-2">
                         <Input type="login" styleName="auth_input" placeholder="Ivanova_m1" />
                     </div>
@@ -20,7 +20,9 @@ const Auth: React.FC = () => {
                         <Input type="password" styleName="auth_input" placeholder="************" />
                     </div>
                 </div>
-                <Button text="Авторизоваться" styleName="auth_btn" />
+                <div className="sec-2">
+                    <Button text="Авторизоваться" styleName="auth_btn" />
+                </div>
             </div>
         </>
     );
