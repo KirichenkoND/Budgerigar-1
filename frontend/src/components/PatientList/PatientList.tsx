@@ -1,32 +1,36 @@
-    import React, { useState } from 'react';
-    import PatientCard from './PatientCard';
-    import Popup from '../Popup/Popup'; // Импортируем компонент Popup
+import React, { useState } from 'react';
+import PatientCard from './PatientCard';
+import Popup from '../Popup/Popup'; // Импортируем компонент Popup
 
-    interface PatientListProps {
-    patients: { 
+import Button from '../../UI/Button/Button';
+
+interface PatientListProps {
+    patients: {
         id: number;
-        name: string; 
+        name: string;
         address: string;
         gender: string;
         age: number;
         insuranceNumber: string;
-        lastvisitdate: string; 
+        lastvisitdate: string;
         report: string;
-        diagnosis: string }[];
-    }
+        diagnosis: string
+    }[];
+}
 
-    const PatientList: React.FC<PatientListProps> = ({ patients }) => {
+const PatientList: React.FC<PatientListProps> = ({ patients }) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedPatient, setSelectedPatient] = useState<{ 
+    const [selectedPatient, setSelectedPatient] = useState<{
         id: number;
-        name: string; 
+        name: string;
         address: string;
         gender: string;
         age: number;
         insuranceNumber: string;
-        lastvisitdate: string; 
+        lastvisitdate: string;
         report: string;
-        diagnosis: string } | null>(null);
+        diagnosis: string
+    } | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false); // Состояние для открытия/закрытия модального окна
     const patientsPerPage = 5;
 
@@ -55,37 +59,37 @@
 
     return (
         <div className="patient-list">
-        <h2>Список пациентов</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>ФИО</th>
-                <th>Последний визит</th>
-                <th>Диагноз</th>
-            </tr>
-            </thead>
-            <tbody>
-            {currentPatients.map((patient, index) => (
-                <tr key={index} onClick={() => handlePatientClick(patient)}>
-                <td>{patient.name}</td>
-                <td>{patient.lastvisitdate}</td>
-                <td>{patient.diagnosis}</td>
-                </tr>
-            ))}
-            </tbody>
-        </table>
-        <div>
-            <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
-            <span>{currentPage} / {totalPages}</span>
-            <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
-        </div>
-        {/* Передаем состояние isPopupOpen и функцию для закрытия модального окна */}
-        <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
-            {/* Отображаем карточку пациента внутри модального окна */}
-            {selectedPatient && <PatientCard {...selectedPatient} />}
-        </Popup>
-        </div>
+            <h2>Список пациентов</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Последний визит</th>
+                        <th>Диагноз</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentPatients.map((patient, index) => (
+                        <tr key={index} onClick={() => handlePatientClick(patient)}>
+                            <td>{patient.name}</td>
+                            <td>{patient.lastvisitdate}</td>
+                            <td>{patient.diagnosis}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <div>
+                <Button text="Previous" onClick={prevPage} disabled={currentPage === 1} />
+                <span>{currentPage} / {totalPages}</span>
+                <Button text="Next" onClick={nextPage} disabled={currentPage === totalPages} />
+            </div>
+            {/* Передаем состояние isPopupOpen и функцию для закрытия модального окна */}
+            <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
+                {/* Отображаем карточку пациента внутри модального окна */}
+                {selectedPatient && <PatientCard {...selectedPatient} />}
+            </Popup>
+        </div >
     );
-    }
+}
 
-    export default PatientList;
+export default PatientList;

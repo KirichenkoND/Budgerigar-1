@@ -1,0 +1,13 @@
+.patient-card {
+    display: flex;
+    flex-direction: row;
+    color: red;
+    gap: 20px;
+    width: auto;
+    flex-wrap: wrap; 
+}
+
+.patient-card > * {
+    flex: 1 1 auto; 
+    min-width: 0;
+}

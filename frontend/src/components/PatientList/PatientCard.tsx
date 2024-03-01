@@ -1,4 +1,5 @@
 import React from 'react';
+import './PatientCard.scss';
 
 interface PatientCardProps {
     id: number;
@@ -15,16 +16,22 @@ interface PatientCardProps {
 const PatientCard: React.FC<PatientCardProps> = ({ id, name, address, gender, age, insuranceNumber, lastvisitdate, report, diagnosis }) => {
     return (
         <div className="patient-card">
-            <h2>{name}</h2>
-            <p>Адрес: {address}</p>
-            <p>Пол: {gender}</p>
-            <p>Возраст: {age}</p>
-            <p>Номер договора: {insuranceNumber}</p>
-            <p>Дата посещения: {lastvisitdate}</p>
-            <p>Жалобы: {report}</p>
-            <p>Диагноз: {diagnosis}</p>
+            <div>
+                <h2>{name}</h2>
+                <p>Пол: {gender}</p>
+                <p>Возраст: {age}</p>
+            </div>
+            <div>
+                <p>Адрес: {address}</p>
+                <p>Номер договора: {insuranceNumber}</p>
+            </div>
+            <div>
+                <p>Дата посещения: {lastvisitdate}</p>
+                <p>Жалобы: {report}</p>
+                <p>Диагноз: {diagnosis}</p>
+            </div>
         </div>
     );
-}
+}прос
 
 export default PatientCard;
