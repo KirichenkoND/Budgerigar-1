@@ -1,7 +1,6 @@
 -- Add down migration script here
 
 DROP TABLE Consented;
-DROP TABLE Verdict;
 DROP TABLE Appointment;
 DROP TABLE Doctor;
 DROP TABLE Room;

@@ -22,7 +22,7 @@ CREATE TABLE Patient(
 
 CREATE TABLE Speciality(
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255)
+    name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Facility(
@@ -56,6 +56,6 @@ CREATE TABLE Appointment(
 
 CREATE TABLE Consented(
     doctor_id INTEGER NOT NULL REFERENCES Doctor(id),
-    verdict_id INTEGER NOT NULL REFERENCES Verdict(id)
+    patient_id INTEGER NOT NULL REFERENCES Patient(id)
 );
 
