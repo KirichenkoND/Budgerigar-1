@@ -39,6 +39,7 @@ async fn main() -> Result<(), error::Error> {
 
     let app = Router::new()
         .route("/account/login", get(routes::account::login))
+        .route("/account/logout", post(routes::account::logout))
         .with_state(state)
         .layer(session_layer);
 

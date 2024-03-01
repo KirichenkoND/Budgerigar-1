@@ -36,3 +36,7 @@ pub async fn login(
 
     Ok(())
 }
+
+pub async fn logout(session: Session) {
+    _ = session.delete().await;
+}
