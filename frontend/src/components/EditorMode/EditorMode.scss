@@ -1,21 +1,41 @@
-.EditorContainer {
-    
-}
+// .EditorContainer {
+
+// }
+
+// .EditorFields {
+//     ul > li {
+//         list-style-type: none;
+//     }
+// }
+
+// ul {
+//     padding: 0;
+// }
+
+// .switcher-buttons {
+//     display: flex;
+//     flex-direction: column;
+// }
+// .user-name {
+//     margin-right: 5px;
+// }
 
 .EditorFields {
-    ul > li {
-        list-style-type: none;
-    }
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
-ul {
-    padding: 0;
+.EditorFields .fields {
+    margin-top: 20px;
 }
 
-.switcher-buttons {
-    display: flex;
-    flex-direction: column;
+.EditorFields label {
+    display: block;
+    margin-bottom: 5px;
 }
-.user-name {
-    margin-right: 5px;
+
+.EditorFields textarea {
+    resize: vertical;
 }
