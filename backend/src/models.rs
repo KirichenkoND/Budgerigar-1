@@ -18,6 +18,12 @@ pub struct Speciality {
     pub name: String,
 }
 
+#[derive(FromRow, Serialize)]
+pub struct Facility {
+    pub id: i32,
+    pub address: String,
+}
+
 #[derive(Serialize)]
 pub struct User {
     pub phone_number: String,

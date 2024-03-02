@@ -29,7 +29,7 @@ CREATE TABLE Speciality(
 
 CREATE TABLE Facility(
     id SERIAL PRIMARY KEY,
-    address VARCHAR(255)
+    address VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE Room(

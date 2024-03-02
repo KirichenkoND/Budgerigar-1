@@ -60,6 +60,11 @@ async fn main() -> Result<(), error::Error> {
             get(routes::speciality::get).post(routes::speciality::create),
         )
         .route("/speciality/:id", delete(routes::speciality::delete))
+        .route(
+            "/facility",
+            get(routes::facility::get).post(routes::facility::create),
+        )
+        .route("/facility/:id", delete(routes::facility::delete))
         .with_state(state)
         .layer(session_layer);
 
