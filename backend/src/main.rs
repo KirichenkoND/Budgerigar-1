@@ -10,13 +10,27 @@ mod error;
 mod models;
 
 mod routes {
-    use crate::AppState;
+    use crate::{models::Role, AppState};
     use axum::extract::State;
 
     type RouteResult<T = ()> = Result<T, super::error::Error>;
     type RouteState = State<AppState>;
 
+    async fn assert_role(session: &tower_sessions::Session, required: Role) -> RouteResult {
+        let role = session
+            .get::<super::models::Role>("role")
+            .await?
+            .ok_or(super::error::Error::Unauthorized)?;
+        if role != required {
+            return Err(crate::error::Error::Forbidden);
+        }
+
+        Ok(())
+    }
+
     pub mod account;
+    pub mod doctor;
+    pub mod speciality;
 }
 
 #[derive(Clone, FromRef)]
@@ -41,6 +55,11 @@ async fn main() -> Result<(), error::Error> {
         .route("/account/login", post(routes::account::login))
         .route("/account/logout", post(routes::account::logout))
         .route("/account/me", get(routes::account::me))
+        .route(
+            "/speciality",
+            get(routes::speciality::get).post(routes::speciality::create),
+        )
+        .route("/speciality/:id", delete(routes::speciality::delete))
         .with_state(state)
         .layer(session_layer);
 

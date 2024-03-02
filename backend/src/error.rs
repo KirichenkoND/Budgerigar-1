@@ -21,11 +21,20 @@ pub enum Error {
     InvalidCredentials,
     #[error("Not authorized")]
     Unauthorized,
+    #[error("Forbidden")]
+    Forbidden,
     #[error("{message}")]
     Custom {
         status: StatusCode,
         message: &'static str,
     },
+}
+
+impl Error {
+    #[inline]
+    pub fn custom(status: StatusCode, message: &'static str) -> Self {
+        Self::Custom { status, message }
+    }
 }
 
 impl IntoResponse for Error {
@@ -36,6 +45,7 @@ impl IntoResponse for Error {
             Error::InvalidCredentials => StatusCode::BAD_REQUEST,
             Error::Custom { status, .. } => status,
             Error::Unauthorized => StatusCode::UNAUTHORIZED,
+            Error::Forbidden => StatusCode::FORBIDDEN,
         };
 
         (
