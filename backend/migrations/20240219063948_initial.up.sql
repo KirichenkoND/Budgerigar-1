@@ -7,8 +7,9 @@ CREATE TABLE Account(
     role ROLE NOT NULL,
     first_name VARCHAR(32) NOT NULL,
     last_name VARCHAR(32) NOT NULL,
-    phone_number VARCHAR(32) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL
+    middle_name VARCHAR(32),
+    phone_number VARCHAR(32) UNIQUE NOT NULL,
+    password_hash VARCHAR(255)
 );
 
 CREATE TABLE Patient(
@@ -16,13 +17,14 @@ CREATE TABLE Patient(
     date_of_birth TIMESTAMPTZ NOT NULL,
     address VARCHAR(255),
     male BOOLEAN NOT NULL,
-    contract_id INTEGER NOT NULL,
+    contract_id INTEGER UNIQUE NOT NULL,
+    account_id INTEGER REFERENCES Account(id) NOT NULL,
     details TEXT
 );
 
 CREATE TABLE Speciality(
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE Facility(
