@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PatientCard from './PatientCard';
 import Popup from '../Popup/Popup';
 
-import defailt_avatar from '../../assets/react.svg';
+import defailt_avatar from '../../../public/user.svg';
 
 import Button from '../../UI/Button/Button';
 
@@ -69,7 +69,7 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
                             <div className="patient-avatar">
                                 <img src={defailt_avatar}></img>
                             </div>
-                            <div>
+                            <div className='patient-info1'>
                                 <p><strong>ФИО:</strong> {patient.name}</p>
                                 <p><strong>Последний визит:</strong> {patient.lastvisitdate}</p>
                                 <p><strong>Диагноз:</strong> {patient.diagnosis}</p>
