@@ -38,12 +38,13 @@ async fn main() -> Result<(), error::Error> {
         .with_expiry(Expiry::OnInactivity(Duration::weeks(2)));
 
     let app = Router::new()
-        .route("/account/login", get(routes::account::login))
+        .route("/account/login", post(routes::account::login))
         .route("/account/logout", post(routes::account::logout))
+        .route("/account/me", get(routes::account::me))
         .with_state(state)
         .layer(session_layer);
 
-    let listener = TcpListener::bind("localhost:9999").await?;
+    let listener = TcpListener::bind("localhost:9000").await?;
     axum::serve(listener, app).await?;
 
     Ok(())

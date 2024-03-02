@@ -1,13 +1,14 @@
 #![allow(dead_code)]
 
 use axum::{extract::FromRequestParts, http::request::Parts};
+use serde::{Deserialize, Serialize};
 use sqlx::{query, PgPool};
 use time::OffsetDateTime;
 use tower_sessions::Session;
 
 use crate::error::Error;
 
-#[derive(sqlx::Type, Debug)]
+#[derive(sqlx::Type, Serialize, Deserialize, Debug)]
 #[sqlx(rename_all = "lowercase")]
 pub enum Role {
     Admin,
@@ -21,6 +22,7 @@ pub struct User {
     pub class: Class,
 }
 
+#[derive(Serialize)]
 pub struct Patient {
     date_of_birth: OffsetDateTime,
     address: String,
