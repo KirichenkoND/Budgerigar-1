@@ -1,7 +1,7 @@
 use crate::{error::Error, AppState};
 use axum::{extract::FromRequestParts, http::request::Parts};
 use serde::{Deserialize, Serialize};
-use sqlx::{prelude::FromRow, query};
+use sqlx::{prelude::FromRow, query, PgPool};
 use tower_sessions::Session;
 
 #[derive(sqlx::Type, Serialize, Deserialize, Debug, PartialEq, Eq)]
@@ -26,12 +26,65 @@ pub struct Facility {
 
 #[derive(Serialize)]
 pub struct User {
+    pub id: i32,
     pub phone_number: String,
     pub first_name: String,
     pub last_name: String,
     pub middle_name: Option<String>,
     #[serde(flatten)]
     pub class: Class,
+}
+
+impl User {
+    pub async fn by_id(id: i32, db: &PgPool) -> Result<Self, Error> {
+        let record = query!(
+            r#"SELECT
+                phone_number,
+                first_name, last_name, middle_name,
+                role as "role: Role",
+                doctor.experience as "experience: Option<i32>",
+                speciality.name as "speciality: Option<String>"
+                FROM Account
+                LEFT JOIN Doctor ON Doctor.account_id = Account.id
+                LEFT JOIN Speciality ON Speciality.id = Doctor.speciality_id
+                WHERE Account.id = $1"#,
+            id
+        )
+        .fetch_one(db)
+        .await?;
+
+        let user = match record.role {
+            Role::Receptionist => User {
+                id,
+                phone_number: record.phone_number,
+                first_name: record.first_name,
+                last_name: record.last_name,
+                middle_name: record.middle_name,
+                class: Class::Receptionist,
+            },
+            Role::Admin => User {
+                id,
+                phone_number: record.phone_number,
+                first_name: record.first_name,
+                last_name: record.last_name,
+                middle_name: record.middle_name,
+                class: Class::Admin,
+            },
+            Role::Doctor => User {
+                id,
+                phone_number: record.phone_number,
+                first_name: record.first_name,
+                last_name: record.last_name,
+                middle_name: record.middle_name,
+                class: Class::Doctor {
+                    speciality: record.speciality.unwrap(),
+                    experience: record.experience.unwrap(),
+                },
+            },
+        };
+
+        Ok(user)
+    }
 }
 
 #[derive(Serialize)]
@@ -57,49 +110,6 @@ impl FromRequestParts<AppState> for User {
             return Err(Error::Unauthorized);
         };
 
-        let record = query!(
-            r#"SELECT
-                phone_number,
-                first_name, last_name, middle_name,
-                role as "role: Role",
-                doctor.experience as "experience: Option<i32>",
-                speciality.name as "speciality: Option<String>"
-                FROM Account
-                LEFT JOIN Doctor ON Doctor.account_id = Account.id
-                LEFT JOIN Speciality ON Speciality.id = Doctor.speciality_id
-                WHERE Account.id = $1"#,
-            id
-        )
-        .fetch_one(&state.db)
-        .await?;
-
-        let user = match record.role {
-            Role::Receptionist => User {
-                phone_number: record.phone_number,
-                first_name: record.first_name,
-                last_name: record.last_name,
-                middle_name: record.middle_name,
-                class: Class::Receptionist,
-            },
-            Role::Admin => User {
-                phone_number: record.phone_number,
-                first_name: record.first_name,
-                last_name: record.last_name,
-                middle_name: record.middle_name,
-                class: Class::Admin,
-            },
-            Role::Doctor => User {
-                phone_number: record.phone_number,
-                first_name: record.first_name,
-                last_name: record.last_name,
-                middle_name: record.middle_name,
-                class: Class::Doctor {
-                    speciality: record.speciality.unwrap(),
-                    experience: record.experience.unwrap(),
-                },
-            },
-        };
-
-        Ok(user)
+        Self::by_id(id, &state.db).await
     }
 }

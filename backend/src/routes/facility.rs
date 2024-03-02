@@ -1,7 +1,7 @@
 use super::{assert_role, RouteResult, RouteState};
 use crate::{
     error::Error,
-    models::{Facility, Role},
+    models::{Class, Facility, Role, User},
 };
 use axum::{
     extract::{Path, Query, State},
@@ -9,7 +9,8 @@ use axum::{
     response::IntoResponse,
     Json,
 };
-use serde::Deserialize;
+use itertools::{izip, Itertools};
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::{error::ErrorKind, query, query_as};
 use tower_sessions::Session;
@@ -33,6 +34,42 @@ pub async fn get(
     )
     .fetch_all(&state.db)
     .await?;
+
+    Ok(Json(results))
+}
+
+#[derive(Serialize)]
+pub struct Room {
+    label: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    doctor_id: Option<i32>,
+}
+
+pub async fn rooms(
+    session: Session,
+    State(state): RouteState,
+    Path(id): Path<i32>,
+) -> RouteResult<impl IntoResponse> {
+    assert_role(&session, Role::Admin).await?;
+
+    let results = query!(
+        r#"
+        SELECT label, Doctor.id as "doctor_id: Option<i32>" FROM Room
+        LEFT JOIN Doctor ON Doctor.room_id = Room.id
+        WHERE Room.facility_id = $1
+    "#,
+        id
+    )
+    .fetch_all(&state.db)
+    .await?;
+
+    let results = results
+        .into_iter()
+        .map(|r| Room {
+            label: r.label,
+            doctor_id: r.doctor_id,
+        })
+        .collect_vec();
 
     Ok(Json(results))
 }

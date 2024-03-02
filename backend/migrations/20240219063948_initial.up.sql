@@ -34,7 +34,7 @@ CREATE TABLE Facility(
 
 CREATE TABLE Room(
     id SERIAL PRIMARY KEY,
-    label VARCHAR(32),
+    label VARCHAR(32) NOT NULL,
     facility_id INTEGER REFERENCES Facility(id) NOT NULL
 );
 

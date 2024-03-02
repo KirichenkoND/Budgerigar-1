@@ -64,6 +64,7 @@ async fn main() -> Result<(), error::Error> {
             "/facility",
             get(routes::facility::get).post(routes::facility::create),
         )
+        .route("/facility/:id/rooms", get(routes::facility::rooms))
         .route("/facility/:id", delete(routes::facility::delete))
         .with_state(state)
         .layer(session_layer);
