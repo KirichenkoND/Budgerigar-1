@@ -1,7 +1,7 @@
-use crate::error::Error;
+use crate::{error::Error, AppState};
 use axum::{extract::FromRequestParts, http::request::Parts};
 use serde::{Deserialize, Serialize};
-use sqlx::{prelude::FromRow, query, PgPool};
+use sqlx::{prelude::FromRow, query};
 use tower_sessions::Session;
 
 #[derive(sqlx::Type, Serialize, Deserialize, Debug, PartialEq, Eq)]
@@ -12,18 +12,24 @@ pub enum Role {
     Receptionist,
 }
 
-pub struct User {
-    pub phone_number: String,
-    pub first_last_name: (String, String),
-    pub class: Class,
-}
-
 #[derive(FromRow, Serialize)]
 pub struct Speciality {
     pub id: i32,
     pub name: String,
 }
 
+#[derive(Serialize)]
+pub struct User {
+    pub phone_number: String,
+    pub first_name: String,
+    pub last_name: String,
+    pub middle_name: Option<String>,
+    #[serde(flatten)]
+    pub class: Class,
+}
+
+#[derive(Serialize)]
+#[serde(tag = "role", rename_all = "lowercase")]
 pub enum Class {
     Admin,
     Receptionist,
@@ -31,52 +37,61 @@ pub enum Class {
 }
 
 #[axum::async_trait]
-impl FromRequestParts<PgPool> for User {
+impl FromRequestParts<AppState> for User {
     type Rejection = Error;
 
-    async fn from_request_parts(parts: &mut Parts, db: &PgPool) -> Result<Self, Self::Rejection> {
-        let session = Session::from_request_parts(parts, db)
+    async fn from_request_parts(
+        parts: &mut Parts,
+        state: &AppState,
+    ) -> Result<Self, Self::Rejection> {
+        let session = Session::from_request_parts(parts, state)
             .await
             .map_err(|(status, message)| Error::Custom { status, message })?;
         let Ok(Some(id)) = session.get::<i32>("account_id").await else {
             return Err(Error::Unauthorized);
         };
 
-        let account = query!(
-            r#"SELECT phone_number, first_name, last_name, role as "role: Role" FROM Account WHERE id = $1"#,
+        let record = query!(
+            r#"SELECT
+                phone_number,
+                first_name, last_name, middle_name,
+                role as "role: Role",
+                doctor.experience as "experience: Option<i32>",
+                speciality.name as "speciality: Option<String>"
+                FROM Account
+                LEFT JOIN Doctor ON Doctor.account_id = Account.id
+                LEFT JOIN Speciality ON Speciality.id = Doctor.speciality_id
+                WHERE Account.id = $1"#,
             id
-        ).fetch_one(db).await?;
+        )
+        .fetch_one(&state.db)
+        .await?;
 
-        let user = match account.role {
+        let user = match record.role {
             Role::Receptionist => User {
-                phone_number: account.phone_number,
-                first_last_name: (account.first_name, account.last_name),
+                phone_number: record.phone_number,
+                first_name: record.first_name,
+                last_name: record.last_name,
+                middle_name: record.middle_name,
                 class: Class::Receptionist,
             },
             Role::Admin => User {
-                phone_number: account.phone_number,
-                first_last_name: (account.first_name, account.last_name),
+                phone_number: record.phone_number,
+                first_name: record.first_name,
+                last_name: record.last_name,
+                middle_name: record.middle_name,
                 class: Class::Admin,
             },
-            Role::Doctor => {
-                let record = query!(
-                    r#"SELECT Speciality.name as speciality, experience FROM Doctor
-                    JOIN Speciality ON Speciality.id = Doctor.speciality_id
-                    WHERE account_id = $1"#,
-                    id
-                )
-                .fetch_one(db)
-                .await?;
-
-                User {
-                    phone_number: account.phone_number,
-                    first_last_name: (account.first_name, account.last_name),
-                    class: Class::Doctor {
-                        speciality: record.speciality,
-                        experience: record.experience,
-                    },
-                }
-            }
+            Role::Doctor => User {
+                phone_number: record.phone_number,
+                first_name: record.first_name,
+                last_name: record.last_name,
+                middle_name: record.middle_name,
+                class: Class::Doctor {
+                    speciality: record.speciality.unwrap(),
+                    experience: record.experience.unwrap(),
+                },
+            },
         };
 
         Ok(user)

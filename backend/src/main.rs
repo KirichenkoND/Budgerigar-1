@@ -29,7 +29,7 @@ mod routes {
     }
 
     pub mod account;
-    pub mod doctor;
+    pub mod facility;
     pub mod speciality;
 }
 
