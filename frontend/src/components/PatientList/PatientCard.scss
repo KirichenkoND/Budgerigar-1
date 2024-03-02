@@ -1,13 +1,38 @@
-.patient-card {
+// .patient-card {
+//     display: flex;
+//     flex-direction: row;
+//     color: red;
+//     gap: 20px;
+//     width: auto;
+//     flex-wrap: wrap; 
+// }
+
+// .patient-card > * {
+//     flex: 1 1 auto; 
+//     min-width: 0;
+// }
+
+.patient-card-container {
     display: flex;
-    flex-direction: row;
-    color: red;
-    gap: 20px;
-    width: auto;
-    flex-wrap: wrap; 
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
-.patient-card > * {
-    flex: 1 1 auto; 
-    min-width: 0;
+.patient-card-item {
+    width: calc(80% - 20px); /* Устанавливаем ширину так, чтобы было по три карточки в строке */
+    margin: 10px;
+    padding: 20px;
+    border-radius: 5%;
+    background-color: #f0f0f0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.patient-card-item:hover {
+    background-color: #e0e0e0;
+}
+
+.patient-info {
+    /* Дополнительные стили информации о пациенте */
 }

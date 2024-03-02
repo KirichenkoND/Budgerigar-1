@@ -32,7 +32,7 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
         diagnosis: string
     } | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false); // Состояние для открытия/закрытия модального окна
-    const patientsPerPage = 5;
+    const patientsPerPage = 3;
 
     const indexOfLastPatient = currentPage * patientsPerPage;
     const indexOfFirstPatient = indexOfLastPatient - patientsPerPage;
@@ -60,24 +60,18 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
     return (
         <div className="patient-list">
             <h2>Список пациентов</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ФИО</th>
-                        <th>Последний визит</th>
-                        <th>Диагноз</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentPatients.map((patient, index) => (
-                        <tr key={index} onClick={() => handlePatientClick(patient)}>
-                            <td>{patient.name}</td>
-                            <td>{patient.lastvisitdate}</td>
-                            <td>{patient.diagnosis}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="patient-card-container">
+                {currentPatients.map((patient, index) => (
+                    <div key={index} className="patient-card-item" onClick={() => handlePatientClick(patient)}>
+                        <div className="patient-info">
+                            <p><strong>ФИО:</strong> {patient.name}</p>
+                            <p><strong>Последний визит:</strong> {patient.lastvisitdate}</p>
+                            <p><strong>Диагноз:</strong> {patient.diagnosis}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             <div>
                 <Button text="Previous" onClick={prevPage} disabled={currentPage === 1} />
                 <span>{currentPage} / {totalPages}</span>
