@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PatientCard from './PatientCard';
-import Popup from '../Popup/Popup'; // Импортируем компонент Popup
+import Popup from '../Popup/Popup';
+
+import defailt_avatar from '../../assets/react.svg';
 
 import Button from '../../UI/Button/Button';
 
@@ -64,9 +66,14 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
                 {currentPatients.map((patient, index) => (
                     <div key={index} className="patient-card-item" onClick={() => handlePatientClick(patient)}>
                         <div className="patient-info">
-                            <p><strong>ФИО:</strong> {patient.name}</p>
-                            <p><strong>Последний визит:</strong> {patient.lastvisitdate}</p>
-                            <p><strong>Диагноз:</strong> {patient.diagnosis}</p>
+                            <div className="patient-avatar">
+                                <img src={defailt_avatar}></img>
+                            </div>
+                            <div>
+                                <p><strong>ФИО:</strong> {patient.name}</p>
+                                <p><strong>Последний визит:</strong> {patient.lastvisitdate}</p>
+                                <p><strong>Диагноз:</strong> {patient.diagnosis}</p>
+                            </div>
                         </div>
                     </div>
                 ))}
