@@ -32,6 +32,6 @@ const PatientCard: React.FC<PatientCardProps> = ({ id, name, address, gender, ag
             </div>
         </div>
     );
-}прос
+}
 
 export default PatientCard;
