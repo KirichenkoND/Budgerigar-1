@@ -5,6 +5,8 @@ use time::Duration;
 use tokio::net::TcpListener;
 use tower_sessions::{Expiry, SessionManagerLayer};
 use tower_sessions_sqlx_store::PostgresStore;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 mod error;
 mod models;
@@ -51,6 +53,12 @@ async fn main() -> Result<(), error::Error> {
     let session_layer = SessionManagerLayer::new(session_store)
         .with_expiry(Expiry::OnInactivity(Duration::weeks(2)));
 
+    #[derive(OpenApi)]
+    #[openapi(paths(routes::facility::get), components(schemas(models::Facility)))]
+    struct ApiDoc;
+
+    let swagger = SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi());
+
     let app = Router::new()
         .route("/account/login", post(routes::account::login))
         .route("/account/logout", post(routes::account::logout))
@@ -66,6 +74,7 @@ async fn main() -> Result<(), error::Error> {
         )
         .route("/facility/:id/rooms", get(routes::facility::rooms))
         .route("/facility/:id", delete(routes::facility::delete))
+        .merge(swagger)
         .with_state(state)
         .layer(session_layer);
 

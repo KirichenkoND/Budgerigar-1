@@ -3,6 +3,7 @@ use axum::{extract::FromRequestParts, http::request::Parts};
 use serde::{Deserialize, Serialize};
 use sqlx::{prelude::FromRow, query, PgPool};
 use tower_sessions::Session;
+use utoipa::ToSchema;
 
 #[derive(sqlx::Type, Serialize, Deserialize, Debug, PartialEq, Eq)]
 #[sqlx(rename_all = "lowercase")]
@@ -12,19 +13,19 @@ pub enum Role {
     Receptionist,
 }
 
-#[derive(FromRow, Serialize)]
+#[derive(ToSchema, FromRow, Serialize)]
 pub struct Speciality {
     pub id: i32,
     pub name: String,
 }
 
-#[derive(FromRow, Serialize)]
+#[derive(ToSchema, FromRow, Serialize)]
 pub struct Facility {
     pub id: i32,
     pub address: String,
 }
 
-#[derive(Serialize)]
+#[derive(ToSchema, Serialize)]
 pub struct User {
     pub id: i32,
     pub phone_number: String,
@@ -32,6 +33,7 @@ pub struct User {
     pub last_name: String,
     pub middle_name: Option<String>,
     #[serde(flatten)]
+    #[schema(inline)]
     pub class: Class,
 }
 
@@ -87,7 +89,7 @@ impl User {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 #[serde(tag = "role", rename_all = "lowercase")]
 pub enum Class {
     Admin,

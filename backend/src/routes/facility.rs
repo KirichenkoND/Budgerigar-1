@@ -1,7 +1,7 @@
 use super::{assert_role, RouteResult, RouteState};
 use crate::{
     error::Error,
-    models::{Class, Facility, Role, User},
+    models::{Facility, Role},
 };
 use axum::{
     extract::{Path, Query, State},
@@ -9,7 +9,7 @@ use axum::{
     response::IntoResponse,
     Json,
 };
-use itertools::{izip, Itertools};
+use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::{error::ErrorKind, query, query_as};
@@ -20,11 +20,21 @@ pub struct Get {
     address: Option<String>,
 }
 
+/// Get all facilities
+#[utoipa::path(
+    get,
+    path = "/facility",
+    responses(
+        (status = 200, description = "Returned all facilities successfully", body = [Facility]),
+        (status = 403, description = "Request is not authorized"),
+        (status = 405, description = "User is forbidden from making the request")
+    )
+)]
 pub async fn get(
     session: Session,
     State(state): RouteState,
     Query(query): Query<Get>,
-) -> RouteResult<impl IntoResponse> {
+) -> RouteResult<Json<Vec<Facility>>> {
     assert_role(&session, Role::Admin).await?;
 
     let results = query_as!(
@@ -49,7 +59,7 @@ pub async fn rooms(
     session: Session,
     State(state): RouteState,
     Path(id): Path<i32>,
-) -> RouteResult<impl IntoResponse> {
+) -> RouteResult<Json<Vec<Room>>> {
     assert_role(&session, Role::Admin).await?;
 
     let results = query!(
