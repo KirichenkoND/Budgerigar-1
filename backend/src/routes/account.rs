@@ -4,13 +4,16 @@ use crate::{
     models::{Role, User},
 };
 use argon2::{Argon2, PasswordVerifier};
-use axum::{extract::State, Json};
+use axum::{
+    extract::{Query, State},
+    Json,
+};
 use serde::Deserialize;
 use sqlx::query;
 use tower_sessions::Session;
-use utoipa::ToSchema;
+use utoipa::IntoParams;
 
-#[derive(ToSchema, Deserialize)]
+#[derive(IntoParams, Debug, Deserialize)]
 pub struct Credentials {
     phone: String,
     password: String,
@@ -20,7 +23,7 @@ pub struct Credentials {
 #[utoipa::path(
     post,
     path = "/account/login",
-    request_body = Credentials,
+    params(Credentials),
     responses(
         (status = 200, description = "Logged in successfully"),
         (status = 405, description = "Credentials are invalid"),
@@ -29,8 +32,13 @@ pub struct Credentials {
 pub async fn login(
     session: Session,
     State(state): RouteState,
-    Json(creds): Json<Credentials>,
+    Query(mut creds): Query<Credentials>,
 ) -> RouteResult {
+    // what
+    if creds.phone.starts_with(' ') {
+        unsafe { creds.phone.as_bytes_mut()[0] = b'+' };
+    }
+
     let record = query!(
         r#"SELECT id, password_hash, role as "role: Role" FROM Account WHERE phone_number = $1 AND role != 'patient'"#,
         creds.phone
@@ -69,7 +77,7 @@ pub async fn logout(session: Session) {
     post,
     path = "/account/me",
     responses(
-        (status = 200, description = "Logged in successfully", body = User),
+        (status = 200, description = "Successfully returned current user", body = User),
         (status = 401, description = "Request is not authorized"),
     )
 )]

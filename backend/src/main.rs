@@ -61,9 +61,14 @@ async fn main() -> Result<(), error::Error> {
             routes::account::login,
             routes::account::logout,
             routes::account::me,
-            routes::facility::get
+            routes::facility::get,
+            routes::facility::create,
+            routes::facility::rooms,
+            routes::facility::delete,
+            routes::speciality::get,
+            routes::speciality::create
         ),
-        components(schemas(models::Facility, models::User, routes::account::Credentials))
+        components(schemas(models::Facility, models::User, models::Speciality, models::Room))
     )]
     struct ApiDoc;
 

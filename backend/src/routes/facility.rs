@@ -1,7 +1,7 @@
 use super::{assert_role, RouteResult, RouteState};
 use crate::{
     error::Error,
-    models::{Facility, Role},
+    models::{Facility, Role, Room},
 };
 use axum::{
     extract::{Path, Query, State},
@@ -10,13 +10,14 @@ use axum::{
     Json,
 };
 use itertools::Itertools;
-use serde::{Deserialize, Serialize};
-use serde_json::json;
+use serde::Deserialize;
 use sqlx::{error::ErrorKind, query, query_as};
 use tower_sessions::Session;
+use utoipa::IntoParams;
 
-#[derive(Deserialize)]
+#[derive(IntoParams, Deserialize)]
 pub struct Get {
+    /// Address filter
     address: Option<String>,
 }
 
@@ -24,6 +25,7 @@ pub struct Get {
 #[utoipa::path(
     get,
     path = "/facility",
+    params(Get),
     responses(
         (status = 200, description = "Returned all facilities successfully", body = [Facility]),
         (status = 401, description = "Request is not authorized"),
@@ -39,7 +41,7 @@ pub async fn get(
 
     let results = query_as!(
         Facility,
-        "SELECT * FROM Facility WHERE LOWER(address) LIKE $1 OR $1 IS NULL",
+        "SELECT * FROM Facility WHERE ('%' || LOWER(address) || '%') LIKE $1 OR $1 IS NULL",
         query.address
     )
     .fetch_all(&state.db)
@@ -48,13 +50,19 @@ pub async fn get(
     Ok(Json(results))
 }
 
-#[derive(Serialize)]
-pub struct Room {
-    label: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    doctor_id: Option<i32>,
-}
-
+/// Get facility rooms
+#[utoipa::path(
+    get,
+    path = "/facility/:id/rooms",
+    params(
+        ("id" = i32, Path, description = "Facility id"),
+    ),
+    responses(
+        (status = 200, description = "Successfully returned rooms", body = [Room]),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
 pub async fn rooms(
     session: Session,
     State(state): RouteState,
@@ -84,31 +92,48 @@ pub async fn rooms(
     Ok(Json(results))
 }
 
-#[derive(Deserialize)]
-pub struct Create {
-    address: String,
-}
-
+/// Create new facility
+#[utoipa::path(
+    post,
+    path = "/facility",
+    request_body = Facility,
+    responses(
+        (status = 200, description = "Facility was created successfully", body = Facility),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
 pub async fn create(
     session: Session,
     State(state): RouteState,
-    Json(data): Json<Create>,
+    Json(data): Json<Facility>,
 ) -> RouteResult<impl IntoResponse> {
     assert_role(&session, &[Role::Admin]).await?;
 
-    let id = query!(
-        "INSERT INTO Facility(address) VALUES($1) RETURNING id",
+    let new = query_as!(
+        Facility,
+        "INSERT INTO Facility(address) VALUES($1) RETURNING address, id",
         data.address
     )
     .fetch_one(&state.db)
-    .await?
-    .id;
+    .await?;
 
-    Ok(Json(json! {{
-        "id": id
-    }}))
+    Ok(Json(new))
 }
 
+/// Delete the facility
+#[utoipa::path(
+    delete,
+    path = "/facility/:id",
+    params(
+        ("id" = i32, Path, description = "Facility id"),
+    ),
+    responses(
+        (status = 200, description = "Facility was deleted successfully"),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
 pub async fn delete(
     session: Session,
     State(state): RouteState,

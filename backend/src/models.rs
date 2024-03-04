@@ -13,15 +13,15 @@ pub enum Role {
     Receptionist,
 }
 
-#[derive(ToSchema, FromRow, Serialize)]
+#[derive(ToSchema, FromRow, Serialize, Deserialize)]
 pub struct Speciality {
-    pub id: i32,
+    pub id: Option<i32>,
     pub name: String,
 }
 
-#[derive(ToSchema, FromRow, Serialize)]
+#[derive(ToSchema, FromRow, Serialize, Deserialize)]
 pub struct Facility {
-    pub id: i32,
+    pub id: Option<i32>,
     pub address: String,
 }
 
@@ -114,4 +114,11 @@ impl FromRequestParts<AppState> for User {
 
         Self::by_id(id, &state.db).await
     }
+}
+
+#[derive(ToSchema, Serialize)]
+pub struct Room {
+    pub label: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub doctor_id: Option<i32>,
 }
