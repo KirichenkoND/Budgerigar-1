@@ -56,7 +56,15 @@ async fn main() -> Result<(), error::Error> {
         .with_expiry(Expiry::OnInactivity(Duration::weeks(2)));
 
     #[derive(OpenApi)]
-    #[openapi(paths(routes::facility::get), components(schemas(models::Facility)))]
+    #[openapi(
+        paths(
+            routes::account::login,
+            routes::account::logout,
+            routes::account::me,
+            routes::facility::get
+        ),
+        components(schemas(models::Facility, models::User, routes::account::Credentials))
+    )]
     struct ApiDoc;
 
     let swagger = SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi());

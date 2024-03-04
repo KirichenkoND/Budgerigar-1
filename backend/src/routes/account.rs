@@ -4,23 +4,25 @@ use crate::{
     models::{Role, User},
 };
 use argon2::{Argon2, PasswordVerifier};
-use axum::{extract::State, response::IntoResponse, Json};
+use axum::{extract::State, Json};
 use serde::Deserialize;
 use sqlx::query;
 use tower_sessions::Session;
+use utoipa::ToSchema;
 
-#[derive(Deserialize)]
+#[derive(ToSchema, Deserialize)]
 pub struct Credentials {
     phone: String,
     password: String,
 }
 
-/// Get all facilities
+/// Log in into an account
 #[utoipa::path(
-    get,
+    post,
     path = "/account/login",
+    request_body = Credentials,
     responses(
-        (status = 200, description = "Logged in successfully", body = [Facility]),
+        (status = 200, description = "Logged in successfully"),
         (status = 405, description = "Credentials are invalid"),
     )
 )]
@@ -50,10 +52,27 @@ pub async fn login(
     Ok(())
 }
 
+/// Logout of the account and quit session
+#[utoipa::path(
+    post,
+    path = "/account/logout",
+    responses(
+        (status = 200, description = "Logged out successfully")
+    )
+)]
 pub async fn logout(session: Session) {
     _ = session.delete().await;
 }
 
-pub async fn me(user: User) -> RouteResult<impl IntoResponse> {
+/// Return current account information
+#[utoipa::path(
+    post,
+    path = "/account/me",
+    responses(
+        (status = 200, description = "Logged in successfully", body = User),
+        (status = 401, description = "Request is not authorized"),
+    )
+)]
+pub async fn me(user: User) -> RouteResult<Json<User>> {
     Ok(Json(user))
 }
