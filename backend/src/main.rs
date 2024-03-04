@@ -33,6 +33,7 @@ mod routes {
     }
 
     pub mod account;
+    pub mod doctor;
     pub mod facility;
     pub mod speciality;
 }
@@ -66,7 +67,9 @@ async fn main() -> Result<(), error::Error> {
             routes::facility::rooms,
             routes::facility::delete,
             routes::speciality::get,
-            routes::speciality::create
+            routes::speciality::create,
+            routes::speciality::delete,
+            routes::doctor::get
         ),
         components(schemas(models::Facility, models::User, models::Speciality, models::Room))
     )]
@@ -89,6 +92,7 @@ async fn main() -> Result<(), error::Error> {
         )
         .route("/facility/:id/rooms", get(routes::facility::rooms))
         .route("/facility/:id", delete(routes::facility::delete))
+        .route("/doctor", get(routes::doctor::get))
         .merge(swagger)
         .with_state(state)
         .layer(session_layer);

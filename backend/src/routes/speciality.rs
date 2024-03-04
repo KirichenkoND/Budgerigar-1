@@ -39,7 +39,7 @@ pub async fn get(
 
     let results = query_as!(
         Speciality,
-        "SELECT * FROM Speciality WHERE ('%' || LOWER(name) || '%') LIKE $1 OR $1 IS NULL",
+        "SELECT * FROM Speciality WHERE LOWER(name) LIKE ('%' || LOWER($1) || '%') OR $1 IS NULL",
         query.name
     )
     .fetch_all(&state.db)
@@ -54,7 +54,7 @@ pub async fn get(
     path = "/speciality",
     request_body = Speciality,
     responses(
-        (status = 200, description = "Successfully created new speciality"),
+        (status = 200, description = "Successfully created new speciality", body = Speciality),
         (status = 401, description = "Request is not authorized"),
         (status = 403, description = "User is forbidden from accessing facility information")
     )
@@ -77,6 +77,20 @@ pub async fn create(
     Ok(Json(new))
 }
 
+/// Delete speciality
+#[utoipa::path(
+    delete,
+    path = "/speciality/:id",
+    params(
+        ("id" = i32, Path, description = "Id of the speciality")
+    ),
+    request_body = Speciality,
+    responses(
+        (status = 200, description = "Successfully deleted speciality"),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
 pub async fn delete(
     session: Session,
     State(state): RouteState,

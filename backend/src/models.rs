@@ -39,13 +39,14 @@ pub struct User {
 
 impl User {
     pub async fn by_id(id: i32, db: &PgPool) -> Result<Self, Error> {
-        let record = query!(
+        let r = query!(
             r#"SELECT
                 phone_number,
                 first_name, last_name, middle_name,
                 role as "role: Role",
                 doctor.experience as "experience: Option<i32>",
-                speciality.name as "speciality: Option<String>"
+                speciality.name as "speciality_name: Option<String>",
+                speciality.id as "speciality_id: Option<i32>"
                 FROM Account
                 LEFT JOIN Doctor ON Doctor.account_id = Account.id
                 LEFT JOIN Speciality ON Speciality.id = Doctor.speciality_id
@@ -55,32 +56,35 @@ impl User {
         .fetch_one(db)
         .await?;
 
-        let user = match record.role {
+        let user = match r.role {
             Role::Receptionist => User {
                 id,
-                phone_number: record.phone_number,
-                first_name: record.first_name,
-                last_name: record.last_name,
-                middle_name: record.middle_name,
+                phone_number: r.phone_number,
+                first_name: r.first_name,
+                last_name: r.last_name,
+                middle_name: r.middle_name,
                 class: Class::Receptionist,
             },
             Role::Admin => User {
                 id,
-                phone_number: record.phone_number,
-                first_name: record.first_name,
-                last_name: record.last_name,
-                middle_name: record.middle_name,
+                phone_number: r.phone_number,
+                first_name: r.first_name,
+                last_name: r.last_name,
+                middle_name: r.middle_name,
                 class: Class::Admin,
             },
             Role::Doctor => User {
                 id,
-                phone_number: record.phone_number,
-                first_name: record.first_name,
-                last_name: record.last_name,
-                middle_name: record.middle_name,
+                phone_number: r.phone_number,
+                first_name: r.first_name,
+                last_name: r.last_name,
+                middle_name: r.middle_name,
                 class: Class::Doctor {
-                    speciality: record.speciality.unwrap(),
-                    experience: record.experience.unwrap(),
+                    speciality: Speciality {
+                        name: r.speciality_name.unwrap(),
+                        id: r.speciality_id,
+                    },
+                    experience: r.experience.unwrap(),
                 },
             },
         };
@@ -94,7 +98,10 @@ impl User {
 pub enum Class {
     Admin,
     Receptionist,
-    Doctor { speciality: String, experience: i32 },
+    Doctor {
+        speciality: Speciality,
+        experience: i32,
+    },
 }
 
 #[axum::async_trait]

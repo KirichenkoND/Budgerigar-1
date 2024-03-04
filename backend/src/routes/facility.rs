@@ -41,7 +41,7 @@ pub async fn get(
 
     let results = query_as!(
         Facility,
-        "SELECT * FROM Facility WHERE ('%' || LOWER(address) || '%') LIKE $1 OR $1 IS NULL",
+        "SELECT * FROM Facility WHERE LOWER(address) LIKE ('%' || LOWER($1) || '%') OR $1 IS NULL",
         query.address
     )
     .fetch_all(&state.db)
