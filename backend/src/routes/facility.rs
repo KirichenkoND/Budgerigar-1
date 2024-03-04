@@ -9,7 +9,6 @@ use axum::{
     response::IntoResponse,
     Json,
 };
-use itertools::Itertools;
 use serde::Deserialize;
 use sqlx::{error::ErrorKind, query, query_as};
 use tower_sessions::Session;
@@ -70,24 +69,16 @@ pub async fn rooms(
 ) -> RouteResult<Json<Vec<Room>>> {
     assert_role(&session, &[Role::Admin]).await?;
 
-    let results = query!(
+    let results = query_as!(
+        Room,
         r#"
-        SELECT label, Doctor.id as "doctor_id: Option<i32>" FROM Room
-        LEFT JOIN Doctor ON Doctor.room_id = Room.id
+        SELECT id, label FROM Room
         WHERE Room.facility_id = $1
     "#,
         id
     )
     .fetch_all(&state.db)
     .await?;
-
-    let results = results
-        .into_iter()
-        .map(|r| Room {
-            label: r.label,
-            doctor_id: r.doctor_id,
-        })
-        .collect_vec();
 
     Ok(Json(results))
 }

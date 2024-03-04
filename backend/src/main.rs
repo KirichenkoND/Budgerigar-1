@@ -69,9 +69,16 @@ async fn main() -> Result<(), error::Error> {
             routes::speciality::get,
             routes::speciality::create,
             routes::speciality::delete,
-            routes::doctor::get
+            routes::doctor::get,
+            routes::doctor::patients
         ),
-        components(schemas(models::Facility, models::User, models::Speciality, models::Room))
+        components(schemas(
+            models::Facility,
+            models::User,
+            models::Speciality,
+            models::Room,
+            models::Patient
+        ))
     )]
     struct ApiDoc;
 
@@ -93,6 +100,7 @@ async fn main() -> Result<(), error::Error> {
         .route("/facility/:id/rooms", get(routes::facility::rooms))
         .route("/facility/:id", delete(routes::facility::delete))
         .route("/doctor", get(routes::doctor::get))
+        .route("/doctor/:id/patients", get(routes::doctor::patients))
         .merge(swagger)
         .with_state(state)
         .layer(session_layer);

@@ -2,6 +2,7 @@ use crate::{error::Error, AppState};
 use axum::{extract::FromRequestParts, http::request::Parts};
 use serde::{Deserialize, Serialize};
 use sqlx::{prelude::FromRow, query, PgPool};
+use time::OffsetDateTime;
 use tower_sessions::Session;
 use utoipa::ToSchema;
 
@@ -46,9 +47,12 @@ impl User {
                 role as "role: Role",
                 doctor.experience as "experience: Option<i32>",
                 speciality.name as "speciality_name: Option<String>",
-                speciality.id as "speciality_id: Option<i32>"
+                speciality.id as "speciality_id: Option<i32>",
+                room.label as "room_label: Option<String>",
+                room.id as "room_id: Option<i32>"
                 FROM Account
                 LEFT JOIN Doctor ON Doctor.account_id = Account.id
+                LEFT JOIN Room ON Room.id = Doctor.room_id
                 LEFT JOIN Speciality ON Speciality.id = Doctor.speciality_id
                 WHERE Account.id = $1"#,
             id
@@ -85,6 +89,10 @@ impl User {
                         id: r.speciality_id,
                     },
                     experience: r.experience.unwrap(),
+                    room: r.room_id.zip(r.room_label).map(|(id, label)| Room {
+                        label,
+                        id: Some(id),
+                    }),
                 },
             },
         };
@@ -100,6 +108,7 @@ pub enum Class {
     Receptionist,
     Doctor {
         speciality: Speciality,
+        room: Option<Room>,
         experience: i32,
     },
 }
@@ -125,7 +134,23 @@ impl FromRequestParts<AppState> for User {
 
 #[derive(ToSchema, Serialize)]
 pub struct Room {
+    pub id: Option<i32>,
     pub label: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub doctor_id: Option<i32>,
+}
+
+#[derive(ToSchema, Serialize)]
+pub struct Patient {
+    pub id: i32,
+    pub first_name: String,
+    pub last_name: String,
+    pub middle_name: Option<String>,
+    #[serde(with = "time::serde::rfc3339")]
+    pub date_of_birth: OffsetDateTime,
+    pub male: bool,
+    pub contract_id: i32,
+    pub address: String,
+    pub details: Option<String>,
+    pub phone_number: String,
+    #[serde(with = "time::serde::rfc3339::option")]
+    pub last_appointment: Option<OffsetDateTime>,
 }

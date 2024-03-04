@@ -15,7 +15,7 @@ CREATE TABLE Account(
 CREATE TABLE Patient(
     id SERIAL PRIMARY KEY,
     date_of_birth TIMESTAMPTZ NOT NULL,
-    address VARCHAR(255),
+    address VARCHAR(255) NOT NULL,
     male BOOLEAN NOT NULL,
     contract_id INTEGER UNIQUE NOT NULL,
     account_id INTEGER REFERENCES Account(id) NOT NULL,
