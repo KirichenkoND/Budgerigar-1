@@ -15,6 +15,15 @@ pub struct Credentials {
     password: String,
 }
 
+/// Get all facilities
+#[utoipa::path(
+    get,
+    path = "/account/login",
+    responses(
+        (status = 200, description = "Logged in successfully", body = [Facility]),
+        (status = 405, description = "Credentials are invalid"),
+    )
+)]
 pub async fn login(
     session: Session,
     State(state): RouteState,

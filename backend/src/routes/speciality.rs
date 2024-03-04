@@ -24,7 +24,7 @@ pub async fn get(
     State(state): RouteState,
     Query(query): Query<Get>,
 ) -> RouteResult<impl IntoResponse> {
-    assert_role(&session, Role::Admin).await?;
+    assert_role(&session, &[Role::Admin]).await?;
 
     let results = query_as!(
         Speciality,
@@ -47,7 +47,7 @@ pub async fn create(
     State(state): RouteState,
     Json(data): Json<Create>,
 ) -> RouteResult<impl IntoResponse> {
-    assert_role(&session, Role::Admin).await?;
+    assert_role(&session, &[Role::Admin]).await?;
 
     let id = query!(
         "INSERT INTO Speciality(name) VALUES($1) RETURNING id",
@@ -67,7 +67,7 @@ pub async fn delete(
     State(state): RouteState,
     Path(id): Path<i32>,
 ) -> RouteResult {
-    assert_role(&session, Role::Admin).await?;
+    assert_role(&session, &[Role::Admin]).await?;
 
     match query!("DELETE FROM Speciality WHERE id = $1", id)
         .execute(&state.db)

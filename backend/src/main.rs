@@ -18,16 +18,18 @@ mod routes {
     type RouteResult<T = ()> = Result<T, super::error::Error>;
     type RouteState = State<AppState>;
 
-    async fn assert_role(session: &tower_sessions::Session, required: Role) -> RouteResult {
-        let role = session
-            .get::<super::models::Role>("role")
-            .await?
-            .ok_or(super::error::Error::Unauthorized)?;
-        if role != required {
-            return Err(crate::error::Error::Forbidden);
+    async fn assert_role(session: &tower_sessions::Session, required: &[Role]) -> RouteResult {
+        for wanted in required.iter() {
+            let role = session
+                .get::<super::models::Role>("role")
+                .await?
+                .ok_or(super::error::Error::Unauthorized)?;
+            if role == *wanted {
+                return Ok(());
+            }
         }
 
-        Ok(())
+        Err(crate::error::Error::Forbidden)
     }
 
     pub mod account;

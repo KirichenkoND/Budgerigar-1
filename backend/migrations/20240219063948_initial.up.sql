@@ -58,6 +58,6 @@ CREATE TABLE Appointment(
 
 CREATE TABLE Consented(
     doctor_id INTEGER NOT NULL REFERENCES Doctor(id),
-    patient_id INTEGER NOT NULL REFERENCES Patient(id)
+    appointment_id INTEGER NOT NULL REFERENCES Appointment(id)
 );
 
