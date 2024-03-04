@@ -53,7 +53,8 @@ CREATE TABLE Appointment(
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     time TIMESTAMPTZ NOT NULL,
     complaint TEXT,
-    diagnosis TEXT
+    diagnosis TEXT,
+    UNIQUE (doctor_id, time)
 );
 
 CREATE TABLE Consented(

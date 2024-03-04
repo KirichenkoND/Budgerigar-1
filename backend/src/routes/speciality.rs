@@ -9,7 +9,7 @@ use axum::{
     Json,
 };
 use serde::Deserialize;
-use sqlx::{error::ErrorKind, query, query_as};
+use sqlx::{query, query_as};
 use tower_sessions::Session;
 use utoipa::IntoParams;
 
@@ -103,12 +103,7 @@ pub async fn delete(
         .await
     {
         Ok(_) => Ok(()),
-        Err(err)
-            if matches!(
-                err.as_database_error().unwrap().kind(),
-                ErrorKind::ForeignKeyViolation
-            ) =>
-        {
+        Err(err) if matches!(err.as_database_error(), Some(err) if err.is_foreign_key_violation()) => {
             Err(Error::custom(
                 StatusCode::BAD_REQUEST,
                 "Нельзя удалить специальность к которой еще привязаны доктора",
