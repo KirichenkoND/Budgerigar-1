@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n        first_name, last_name, middle_name, phone_number,\n        experience, speciality.name as speciality_name, speciality.id as speciality_id,\n        room.id as \"room_id: Option<i32>\",\n        room.label as \"room_label: Option<String>\"\n        FROM Doctor\n        JOIN Account ON Account.id = Doctor.account_id\n        LEFT JOIN Room ON Room.id = Doctor.room_id\n        JOIN Speciality ON Speciality.id = Doctor.speciality_id\n        WHERE role = 'doctor' AND\n        Doctor.account_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "first_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "last_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "middle_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "phone_number",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "experience",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "speciality_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "speciality_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "room_id: Option<i32>",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "room_label: Option<String>",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "59705b450ed4e8ef345ca72deb0c4637b69efe3cce9f371780a21e404e4556e8"
+}

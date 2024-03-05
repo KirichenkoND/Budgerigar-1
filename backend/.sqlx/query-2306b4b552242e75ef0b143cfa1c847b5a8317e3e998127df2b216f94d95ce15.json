@@ -1,0 +1,82 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT Patient.account_id as id, first_name, last_name, middle_name, male, details,\n        phone_number, date_of_birth, contract_id, address, appointment.time AS last_appointment\n        FROM Patient\n        JOIN Account ON Account.id = Patient.account_id\n        LEFT JOIN Appointment ON Appointment.patient_id = Patient.account_id\n        WHERE Patient.account_id = $1\n        ORDER BY appointment.time DESC\n        LIMIT 1\n    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "first_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "last_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "middle_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "male",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "details",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "phone_number",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "date_of_birth",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "contract_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "address",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "last_appointment",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "2306b4b552242e75ef0b143cfa1c847b5a8317e3e998127df2b216f94d95ce15"
+}

@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT COUNT (DISTINCT patient_id) as last_month_unique_patients FROM Appointment\n        WHERE doctor_id = $1 AND time < current_date AND time > (current_date - interval '1 month')",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "last_month_unique_patients",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "f5cb5323ec8f99f013469464967f710754e780a4a217957f5fe9482b6e659af4"
+}

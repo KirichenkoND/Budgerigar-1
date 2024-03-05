@@ -5,6 +5,8 @@ use time::Duration;
 use tokio::net::TcpListener;
 use tower_sessions::{Expiry, SessionManagerLayer};
 use tower_sessions_sqlx_store::PostgresStore;
+use tracing::{info, Level};
+use tracing_subscriber::{fmt, prelude::*, registry, EnvFilter};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -48,7 +50,19 @@ struct AppState {
 async fn main() -> Result<(), error::Error> {
     _ = dotenvy::dotenv();
 
+    registry()
+        .with(
+            fmt::layer().with_filter(
+                EnvFilter::builder()
+                    .with_default_directive(Level::INFO.into())
+                    .from_env_lossy(),
+            ),
+        )
+        .init();
+
+    info!("Connecting to db");
     let db = PgPool::connect(&var("DATABASE_URL").expect("env `DATABASE_URL` is required")).await?;
+
     let state = AppState { db: db.clone() };
 
     let session_store = PostgresStore::new(db.clone());
@@ -122,7 +136,9 @@ async fn main() -> Result<(), error::Error> {
         .with_state(state)
         .layer(session_layer);
 
-    let listener = TcpListener::bind("localhost:9000").await?;
+    let listener = TcpListener::bind("0.0.0.0:9000").await?;
+    info!("Listening at {}", listener.local_addr()?);
+
     axum::serve(listener, app).await?;
 
     Ok(())

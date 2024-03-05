@@ -1,0 +1,82 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT DISTINCT ON (Patient.account_id) Patient.account_id as id, first_name, last_name, middle_name, male, details,\n        phone_number, date_of_birth, contract_id, address,\n        CASE\n            WHEN appointment.time < CURRENT_TIMESTAMP THEN appointment.time\n            ELSE NULL\n        END AS last_appointment\n        FROM Patient\n        JOIN Account ON Account.id = Patient.account_id\n        LEFT JOIN Appointment ON Appointment.patient_id = Patient.account_id\n        WHERE (LOWER(last_name || first_name || middle_name) LIKE ('%' || LOWER($1) || '%') OR $1 IS NULL)\n    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "first_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "last_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "middle_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "male",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 5,
+        "name": "details",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "phone_number",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "date_of_birth",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "contract_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "address",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "last_appointment",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      null
+    ]
+  },
+  "hash": "62f716bf4f6055c2fad3fe76bd0592cc816b7ba3d713c6dae0841c54445a7e32"
+}

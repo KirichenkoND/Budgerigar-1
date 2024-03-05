@@ -1,0 +1,88 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n                phone_number,\n                first_name, last_name, middle_name,\n                role as \"role: Role\",\n                doctor.experience as \"experience: Option<i32>\",\n                speciality.name as \"speciality_name: Option<String>\",\n                speciality.id as \"speciality_id: Option<i32>\",\n                room.label as \"room_label: Option<String>\",\n                room.id as \"room_id: Option<i32>\"\n                FROM Account\n                LEFT JOIN Doctor ON Doctor.account_id = Account.id\n                LEFT JOIN Room ON Room.id = Doctor.room_id\n                LEFT JOIN Speciality ON Speciality.id = Doctor.speciality_id\n                WHERE Account.id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "phone_number",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "first_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "last_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "middle_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "role: Role",
+        "type_info": {
+          "Custom": {
+            "name": "role",
+            "kind": {
+              "Enum": [
+                "patient",
+                "doctor",
+                "admin",
+                "receptionist"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "experience: Option<i32>",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "speciality_name: Option<String>",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "speciality_id: Option<i32>",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "room_label: Option<String>",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "room_id: Option<i32>",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b3b43e8a1d763cdebb8cc4546602dd1d3e4170337115907a43a1e6c3375aca9e"
+}

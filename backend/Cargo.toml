@@ -17,5 +17,7 @@ time = { version = "0.3.34", features = ["serde"] }
 tokio = { version = "1.36.0", features = ["full"] }
 tower-sessions = "0.10.4"
 tower-sessions-sqlx-store = { version = "0.10.0", features = ["postgres"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 utoipa = { version = "4.2.0", features = ["axum_extras"] }
 utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
