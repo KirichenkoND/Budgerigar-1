@@ -45,6 +45,7 @@ impl User {
                 phone_number,
                 first_name, last_name, middle_name,
                 role as "role: Role",
+                doctor.id as "doctor_id: Option<i32>",
                 doctor.experience as "experience: Option<i32>",
                 speciality.name as "speciality_name: Option<String>",
                 speciality.id as "speciality_id: Option<i32>",
@@ -78,7 +79,7 @@ impl User {
                 class: Class::Admin,
             },
             Role::Doctor => User {
-                id,
+                id: r.doctor_id.unwrap(),
                 phone_number: r.phone_number,
                 first_name: r.first_name,
                 last_name: r.last_name,

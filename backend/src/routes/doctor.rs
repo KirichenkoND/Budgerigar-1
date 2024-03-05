@@ -114,7 +114,7 @@ pub async fn get(
         LEFT JOIN Room ON Room.id = Doctor.room_id
         JOIN Speciality ON Speciality.id = Doctor.speciality_id
         WHERE role = 'doctor' AND
-        (LOWER(first_name || last_name || middle_name) LIKE ('%' || $1 || '%') OR $1 IS NULL) AND
+        (LOWER(last_name || first_name || middle_name) LIKE ('%' || $1 || '%') OR $1 IS NULL) AND
         (speciality_id = $2 OR $2 IS NULL)"#,
         query.name,
         query.speciality
