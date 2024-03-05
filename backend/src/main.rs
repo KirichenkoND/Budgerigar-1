@@ -107,6 +107,7 @@ async fn main() -> Result<(), error::Error> {
         .route("/doctor/:id/patients", get(routes::doctor::patients))
         .route("/doctor/:id/stats", get(routes::doctor::stats))
         .route("/doctor/:id/schedule", get(routes::doctor::schedule))
+        .route("/doctor/:id", get(routes::doctor::get_by_id))
         .route(
             "/doctor/:id/appointment/:patient_id",
             post(routes::doctor::appointment),

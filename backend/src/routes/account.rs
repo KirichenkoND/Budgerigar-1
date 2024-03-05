@@ -74,7 +74,7 @@ pub async fn logout(session: Session) {
 
 /// Return current account information
 #[utoipa::path(
-    post,
+    get,
     path = "/account/me",
     responses(
         (status = 200, description = "Successfully returned current user", body = User),
