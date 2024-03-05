@@ -59,9 +59,3 @@ CREATE TABLE Appointment(
 
     UNIQUE (doctor_id, time)
 );
-
-CREATE TABLE Consented(
-    doctor_id INTEGER NOT NULL REFERENCES Doctor,
-    appointment_id INTEGER NOT NULL REFERENCES Appointment
-);
-

@@ -155,3 +155,18 @@ pub struct Patient {
     #[serde(with = "time::serde::rfc3339::option")]
     pub last_appointment: Option<OffsetDateTime>,
 }
+
+#[derive(ToSchema, FromRow, Serialize)]
+pub struct Appointment {
+    pub id: i32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub complaint: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub diagnosis: Option<String>,
+    #[serde(with = "time::serde::rfc3339")]
+    pub created_at: OffsetDateTime,
+    #[serde(with = "time::serde::rfc3339")]
+    pub time: OffsetDateTime,
+    pub doctor_id: i32,
+    pub patient_id: i32,
+}

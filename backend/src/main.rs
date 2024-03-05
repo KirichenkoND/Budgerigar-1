@@ -35,6 +35,7 @@ mod routes {
     }
 
     pub mod account;
+    pub mod appointment;
     pub mod doctor;
     pub mod facility;
     pub mod patient;
@@ -132,6 +133,7 @@ async fn main() -> Result<(), error::Error> {
         )
         .route("/patient", get(routes::patient::get))
         .route("/patient/:id", get(routes::patient::get_by_id))
+        .route("/appointment", get(routes::appointment::get))
         .merge(swagger)
         .with_state(state)
         .layer(session_layer);
