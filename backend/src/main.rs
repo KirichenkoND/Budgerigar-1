@@ -71,10 +71,13 @@ async fn main() -> Result<(), error::Error> {
             routes::speciality::create,
             routes::speciality::delete,
             routes::doctor::get,
+            routes::doctor::get_by_id,
             routes::doctor::patients,
             routes::doctor::stats,
             routes::doctor::schedule,
             routes::doctor::appointment,
+            routes::patient::get,
+            routes::patient::get_by_id,
         ),
         components(schemas(
             models::Facility,
@@ -114,6 +117,7 @@ async fn main() -> Result<(), error::Error> {
             post(routes::doctor::appointment),
         )
         .route("/patient", get(routes::patient::get))
+        .route("/patient/:id", get(routes::patient::get_by_id))
         .merge(swagger)
         .with_state(state)
         .layer(session_layer);

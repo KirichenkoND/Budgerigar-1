@@ -13,13 +13,14 @@ CREATE TABLE Account(
 );
 
 CREATE TABLE Patient(
-    id SERIAL PRIMARY KEY,
+    account_id INTEGER REFERENCES Account NOT NULL,
     date_of_birth TIMESTAMPTZ NOT NULL,
     address VARCHAR(255) NOT NULL,
     male BOOLEAN NOT NULL,
     contract_id INTEGER UNIQUE NOT NULL,
-    account_id INTEGER REFERENCES Account(id) NOT NULL,
-    details TEXT
+    details TEXT,
+
+    PRIMARY KEY (account_id)
 );
 
 CREATE TABLE Speciality(
@@ -35,30 +36,32 @@ CREATE TABLE Facility(
 CREATE TABLE Room(
     id SERIAL PRIMARY KEY,
     label VARCHAR(32) NOT NULL,
-    facility_id INTEGER REFERENCES Facility(id) NOT NULL
+    facility_id INTEGER REFERENCES Facility NOT NULL
 );
 
 CREATE TABLE Doctor(
-    id SERIAL PRIMARY KEY,
+    account_id INTEGER NOT NULL REFERENCES Account,
     experience INTEGER NOT NULL DEFAULT 0,
-    account_id INTEGER NOT NULL REFERENCES Account(id),
-    speciality_id INTEGER NOT NULL REFERENCES Speciality(id),
-    room_id INTEGER REFERENCES Room(id)
+    speciality_id INTEGER NOT NULL REFERENCES Speciality,
+    room_id INTEGER REFERENCES Room,
+
+    PRIMARY KEY (account_id)
 );
 
 CREATE TABLE Appointment(
     id SERIAL PRIMARY KEY,
-    doctor_id INTEGER NOT NULL REFERENCES Doctor(id),
-    patient_id INTEGER NOT NULL REFERENCES Patient(id),
+    doctor_id INTEGER NOT NULL REFERENCES Doctor,
+    patient_id INTEGER NOT NULL REFERENCES Patient,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     time TIMESTAMPTZ NOT NULL,
     complaint TEXT,
     diagnosis TEXT,
+
     UNIQUE (doctor_id, time)
 );
 
 CREATE TABLE Consented(
-    doctor_id INTEGER NOT NULL REFERENCES Doctor(id),
-    appointment_id INTEGER NOT NULL REFERENCES Appointment(id)
+    doctor_id INTEGER NOT NULL REFERENCES Doctor,
+    appointment_id INTEGER NOT NULL REFERENCES Appointment
 );
 

@@ -26,7 +26,7 @@ pub struct Facility {
     pub address: String,
 }
 
-#[derive(ToSchema, Serialize)]
+#[derive(ToSchema, FromRow, Serialize)]
 pub struct User {
     pub id: i32,
     pub phone_number: String,
@@ -35,6 +35,7 @@ pub struct User {
     pub middle_name: Option<String>,
     #[serde(flatten)]
     #[schema(inline)]
+    #[sqlx(flatten)]
     pub class: Class,
 }
 
@@ -45,7 +46,6 @@ impl User {
                 phone_number,
                 first_name, last_name, middle_name,
                 role as "role: Role",
-                doctor.id as "doctor_id: Option<i32>",
                 doctor.experience as "experience: Option<i32>",
                 speciality.name as "speciality_name: Option<String>",
                 speciality.id as "speciality_id: Option<i32>",
@@ -79,7 +79,7 @@ impl User {
                 class: Class::Admin,
             },
             Role::Doctor => User {
-                id: r.doctor_id.unwrap(),
+                id,
                 phone_number: r.phone_number,
                 first_name: r.first_name,
                 last_name: r.last_name,

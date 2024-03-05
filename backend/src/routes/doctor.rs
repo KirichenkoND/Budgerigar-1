@@ -25,7 +25,7 @@ use utoipa::{IntoParams, ToSchema};
         ("id" = i32, Path, description = "Doctor id")
     ),
     responses(
-        (status = 200, description = "Successfully returned current user", body = [User]),
+        (status = 200, description = "Successfully returned doctor", body = [User]),
         (status = 401, description = "Request is not authorized"),
         (status = 403, description = "User is forbidden from accessing facility information")
     )
@@ -38,7 +38,7 @@ pub async fn get_by_id(
     assert_role(&session, &[Role::Admin, Role::Receptionist]).await?;
 
     let Some(r) = query!(
-        r#"SELECT Doctor.id,
+        r#"SELECT
         first_name, last_name, middle_name, phone_number,
         experience, speciality.name as speciality_name, speciality.id as speciality_id,
         room.id as "room_id: Option<i32>",
@@ -48,7 +48,7 @@ pub async fn get_by_id(
         LEFT JOIN Room ON Room.id = Doctor.room_id
         JOIN Speciality ON Speciality.id = Doctor.speciality_id
         WHERE role = 'doctor' AND
-        Doctor.id = $1"#,
+        Doctor.account_id = $1"#,
         id
     )
     .fetch_optional(&state.db)
@@ -58,7 +58,7 @@ pub async fn get_by_id(
     };
 
     let user = User {
-        id: r.id,
+        id,
         phone_number: r.phone_number,
         first_name: r.first_name,
         last_name: r.last_name,
@@ -104,7 +104,8 @@ pub async fn get(
     assert_role(&session, &[Role::Admin, Role::Receptionist]).await?;
 
     let records = query!(
-        r#"SELECT Doctor.id,
+        r#"SELECT
+        Doctor.account_id as id,
         first_name, last_name, middle_name, phone_number,
         experience, speciality.name as speciality_name, speciality.id as speciality_id,
         room.id as "room_id: Option<i32>",
@@ -177,12 +178,11 @@ pub async fn patients(
     let patients = query_as!(
         Patient,
         r#"SELECT
-        DISTINCT Patient.id,
-        first_name, last_name, middle_name, details,
+        Patient.account_id as id, first_name, last_name, middle_name, details,
         phone_number, male, address, date_of_birth, contract_id,
         appointment.time as last_appointment
         FROM Appointment
-        JOIN Patient ON Patient.id = Appointment.patient_id
+        JOIN Patient ON Patient.account_id = Appointment.patient_id
         JOIN Account ON Account.id = Patient.account_id
         WHERE doctor_id = $1 AND
         (LOWER(first_name || last_name || middle_name) LIKE ('%' || $2 || '%') OR ($2 IS NULL)) AND
