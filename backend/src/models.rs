@@ -14,19 +14,19 @@ pub enum Role {
     Receptionist,
 }
 
-#[derive(ToSchema, FromRow, Serialize, Deserialize)]
+#[derive(Debug, ToSchema, FromRow, Serialize, Deserialize)]
 pub struct Speciality {
     pub id: Option<i32>,
     pub name: String,
 }
 
-#[derive(ToSchema, FromRow, Serialize, Deserialize)]
+#[derive(Debug, ToSchema, FromRow, Serialize, Deserialize)]
 pub struct Facility {
     pub id: Option<i32>,
     pub address: String,
 }
 
-#[derive(ToSchema, FromRow, Serialize)]
+#[derive(Debug, ToSchema, FromRow, Serialize)]
 pub struct User {
     pub id: i32,
     pub phone_number: String,
@@ -102,7 +102,7 @@ impl User {
     }
 }
 
-#[derive(Serialize, ToSchema)]
+#[derive(Debug, Serialize, ToSchema)]
 #[serde(tag = "role", rename_all = "lowercase")]
 pub enum Class {
     Admin,
@@ -133,7 +133,7 @@ impl FromRequestParts<AppState> for User {
     }
 }
 
-#[derive(ToSchema, Serialize)]
+#[derive(Debug, ToSchema, Serialize)]
 pub struct Room {
     pub id: Option<i32>,
     pub label: String,

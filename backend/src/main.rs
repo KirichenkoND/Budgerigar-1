@@ -134,6 +134,7 @@ async fn main() -> Result<(), error::Error> {
         .route("/patient", get(routes::patient::get))
         .route("/patient/:id", get(routes::patient::get_by_id))
         .route("/appointment", get(routes::appointment::get))
+        .route("/appointment/:id", patch(routes::appointment::update))
         .merge(swagger)
         .with_state(state)
         .layer(session_layer);

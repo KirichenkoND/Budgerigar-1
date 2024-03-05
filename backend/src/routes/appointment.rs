@@ -1,7 +1,10 @@
 use super::{assert_role, RouteResult, RouteState};
-use crate::models::{Appointment, Role};
+use crate::{
+    error::Error,
+    models::{Appointment, Class, Role, User},
+};
 use axum::{
-    extract::{Query, State},
+    extract::{Path, Query, State},
     Json,
 };
 use serde::Deserialize;
@@ -16,17 +19,8 @@ pub struct AppointmentsQuery {
     after: Option<OffsetDateTime>,
     doctor_id: Option<i32>,
     patient_id: Option<i32>,
-    #[serde(default = "default_count")]
-    count: i32,
-    #[serde(default = "default_offset")]
-    offset: i32,
-}
-
-fn default_count() -> i32 {
-    5
-}
-fn default_offset() -> i32 {
-    0
+    count: Option<i64>,
+    offset: Option<i64>,
 }
 
 pub async fn get(
@@ -52,11 +46,47 @@ pub async fn get(
         query.patient_id,
         query.before,
         query.after,
-        u32::try_from(query.count).unwrap_or(5) as i32,
-        u32::try_from(query.offset).unwrap_or(0) as i32,
+        query.count.unwrap_or(5).clamp(0, 25),
+        query.offset.unwrap_or(0).max(0),
     )
     .fetch_all(&state.db)
     .await?;
 
     Ok(Json(results))
+}
+
+#[derive(IntoParams, Deserialize)]
+pub struct UpdateQuery {
+    pub diagnosis: Option<String>,
+    pub complaint: Option<String>,
+}
+
+pub async fn update(
+    user: User,
+    State(state): RouteState,
+    Query(query): Query<UpdateQuery>,
+    Path(id): Path<i32>,
+) -> RouteResult<Json<Appointment>> {
+    let mut tx = state.db.begin().await?;
+
+    let result: Appointment = query_as!(
+        Appointment,
+        "UPDATE Appointment SET
+        diagnosis = CASE WHEN $1::text IS NULL THEN diagnosis ELSE $1 END,
+        complaint = CASE WHEN $2::text IS NULL THEN complaint ELSE $2 END
+        WHERE id = $3
+        RETURNING *",
+        query.diagnosis,
+        query.complaint,
+        id
+    )
+    .fetch_one(&mut *tx)
+    .await?;
+
+    if result.doctor_id != user.id && !matches!(user.class, Class::Admin) {
+        return Err(Error::Forbidden);
+    }
+
+    tx.commit().await?;
+    Ok(Json(result))
 }
