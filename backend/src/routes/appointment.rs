@@ -23,6 +23,17 @@ pub struct AppointmentsQuery {
     offset: Option<i64>,
 }
 
+/// Fetch appointment with filters
+#[utoipa::path(
+    post,
+    path = "/appointment",
+    params(AppointmentsQuery),
+    responses(
+        (status = 200, description = "Returned appointments successfully", body = [Appointment]),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
 pub async fn get(
     session: Session,
     State(state): RouteState,
@@ -61,6 +72,20 @@ pub struct UpdateQuery {
     pub complaint: Option<String>,
 }
 
+/// Update appointment information
+#[utoipa::path(
+    patch,
+    path = "/appointment/:id",
+    params(
+        UpdateQuery,
+        ("id" = i32, Path, description = "Id of the appointment")
+    ),
+    responses(
+        (status = 200, description = "Updated appointment successfully, returned new appointment", body = Appointment),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
 pub async fn update(
     user: User,
     State(state): RouteState,

@@ -93,6 +93,8 @@ async fn main() -> Result<(), error::Error> {
             routes::doctor::appointment,
             routes::patient::get,
             routes::patient::get_by_id,
+            routes::appointment::get,
+            routes::appointment::update,
         ),
         components(schemas(
             models::Facility,
@@ -100,6 +102,7 @@ async fn main() -> Result<(), error::Error> {
             models::Speciality,
             models::Room,
             models::Patient,
+            models::Appointment,
             routes::doctor::Statistics
         ))
     )]

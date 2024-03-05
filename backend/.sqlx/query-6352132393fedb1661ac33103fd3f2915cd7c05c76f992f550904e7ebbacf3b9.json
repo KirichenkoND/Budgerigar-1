@@ -1,0 +1,63 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT *\n        FROM Appointment\n        WHERE\n            (Appointment.doctor_id = $1 OR $1 IS NULL) AND\n            (Appointment.patient_id = $2 OR $2 IS NULL) AND\n            (Appointment.time < $3 OR $3 IS NULL) AND\n            (Appointment.time > $4 OR $4 IS NULL)\n        LIMIT $5 OFFSET $6\n    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "doctor_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "patient_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 4,
+        "name": "time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 5,
+        "name": "complaint",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "diagnosis",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Timestamptz",
+        "Timestamptz",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "6352132393fedb1661ac33103fd3f2915cd7c05c76f992f550904e7ebbacf3b9"
+}
