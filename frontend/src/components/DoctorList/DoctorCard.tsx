@@ -1,4 +1,6 @@
 import React from 'react';
+import Button from '../../UI/Button/Button';
+
 import './DoctorCard.scss';
 
 interface DoctorCardProps {
@@ -16,16 +18,21 @@ interface DoctorCardProps {
 
 const DoctorCard: React.FC<DoctorCardProps> = ({ id, name, category, experience, age, specialization, area, schedule, office, appointmentSchedule }) => {
     return (
-        <div>
-            <h2>{name}</h2>
-            <p>Категория: {category}</p>
-            <p>Опыт работы: {experience}</p>
-            <p>Специализация: {specialization}</p>
-            <p>Область работы: {area}</p>
-            <p>График работы: {schedule}</p>
-            <p>Кабинет: {office}</p>
-            <p>График приема: {appointmentSchedule}</p>
-        </div>
+        <>
+            <div>
+                <h2>{name}</h2>
+                <p>Категория: {category}</p>
+                <p>Опыт работы: {experience}</p>
+                <p>Специализация: {specialization}</p>
+                <p>Область работы: {area}</p>
+                <p>График работы: {schedule}</p>
+                <p>Кабинет: {office}</p>
+                <p>График приема: {appointmentSchedule}</p>
+            </div>
+            <div>
+                <Button text="Удалить" styleName="red_btn"/>
+            </div>
+        </>
     );
 }
 
