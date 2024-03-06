@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import PatientCard from './PatientCard';
 import Popup from '../Popup/Popup';
-
+import './PatientList.scss'
 import defailt_avatar from '../../../public/user.svg';
 
 import Button from '../../UI/Button/Button';
+import { Sessions } from './PatientCard';
 
 interface PatientListProps {
     patients: {
@@ -14,9 +15,7 @@ interface PatientListProps {
         gender: string;
         age: number;
         insuranceNumber: string;
-        lastvisitdate: string;
-        report: string;
-        diagnosis: string
+        sessions: Sessions[]; 
     }[];
 }
 
@@ -29,9 +28,7 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
         gender: string;
         age: number;
         insuranceNumber: string;
-        lastvisitdate: string;
-        report: string;
-        diagnosis: string
+        sessions: Sessions[];
     } | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false); // Состояние для открытия/закрытия модального окна
     const patientsPerPage = 3;
@@ -71,8 +68,7 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
                             </div>
                             <div className='patient-info1'>
                                 <p><strong>ФИО:</strong> {patient.name}</p>
-                                <p><strong>Последний визит:</strong> {patient.lastvisitdate}</p>
-                                <p><strong>Диагноз:</strong> {patient.diagnosis}</p>
+                                <p><strong>Последний визит:</strong> {patient.sessions[patient.sessions.length-1].visitdate}</p>
                             </div>
                         </div>
                     </div>
@@ -84,9 +80,7 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
                 <span>{currentPage} / {totalPages}</span>
                 <Button text="Next" onClick={nextPage} disabled={currentPage === totalPages} />
             </div>
-            {/* Передаем состояние isPopupOpen и функцию для закрытия модального окна */}
             <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
-                {/* Отображаем карточку пациента внутри модального окна */}
                 {selectedPatient && <PatientCard {...selectedPatient} />}
             </Popup>
         </div >
