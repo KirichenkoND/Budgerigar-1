@@ -2,7 +2,7 @@ import React from 'react';
 import "./Input.scss";
 
 interface InputProps {
-    type: string;
+    type?: string;
     styleName?: string
     placeholder?: string;
 }
