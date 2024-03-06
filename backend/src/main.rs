@@ -86,6 +86,7 @@ async fn main() -> Result<(), error::Error> {
             routes::speciality::create,
             routes::speciality::delete,
             routes::doctor::get,
+            routes::doctor::create,
             routes::doctor::get_by_id,
             routes::doctor::patients,
             routes::doctor::stats,
@@ -103,7 +104,9 @@ async fn main() -> Result<(), error::Error> {
             models::Room,
             models::Patient,
             models::Appointment,
-            routes::doctor::Statistics
+            routes::account::Credentials,
+            routes::doctor::Statistics,
+            routes::doctor::CreateDoctor
         ))
     )]
     struct ApiDoc;
@@ -125,7 +128,10 @@ async fn main() -> Result<(), error::Error> {
         )
         .route("/facility/:id/rooms", get(routes::facility::rooms))
         .route("/facility/:id", delete(routes::facility::delete))
-        .route("/doctor", get(routes::doctor::get))
+        .route(
+            "/doctor",
+            get(routes::doctor::get).post(routes::doctor::create),
+        )
         .route("/doctor/:id/patients", get(routes::doctor::patients))
         .route("/doctor/:id/stats", get(routes::doctor::stats))
         .route("/doctor/:id/schedule", get(routes::doctor::schedule))

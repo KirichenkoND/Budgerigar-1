@@ -4,16 +4,14 @@ use crate::{
     models::{Role, User},
 };
 use argon2::{Argon2, PasswordVerifier};
-use axum::{
-    extract::{Query, State},
-    Json,
-};
+use axum::{extract::State, Json};
 use serde::Deserialize;
 use sqlx::query;
 use tower_sessions::Session;
-use utoipa::IntoParams;
+use tracing::info;
+use utoipa::ToSchema;
 
-#[derive(IntoParams, Debug, Deserialize)]
+#[derive(ToSchema, Debug, Deserialize)]
 pub struct Credentials {
     phone: String,
     password: String,
@@ -23,7 +21,7 @@ pub struct Credentials {
 #[utoipa::path(
     post,
     path = "/account/login",
-    params(Credentials),
+    request_body = Credentials,
     responses(
         (status = 200, description = "Logged in successfully"),
         (status = 405, description = "Credentials are invalid"),
@@ -32,16 +30,13 @@ pub struct Credentials {
 pub async fn login(
     session: Session,
     State(state): RouteState,
-    Query(mut creds): Query<Credentials>,
+    Json(data): Json<Credentials>,
 ) -> RouteResult {
-    // what
-    if creds.phone.starts_with(' ') {
-        unsafe { creds.phone.as_bytes_mut()[0] = b'+' };
-    }
+    info!("Attempted login {}", data.phone);
 
     let record = query!(
         r#"SELECT id, password_hash, role as "role: Role" FROM Account WHERE phone_number = $1 AND role != 'patient'"#,
-        creds.phone
+        data.phone
     )
     .fetch_optional(&state.db)
     .await?
@@ -50,7 +45,7 @@ pub async fn login(
     let argon = Argon2::default();
     argon
         .verify_password(
-            creds.password.as_bytes(),
+            data.password.as_bytes(),
             &record.password_hash.unwrap().as_str().try_into().unwrap(),
         )
         .map_err(|_| Error::InvalidCredentials)?;

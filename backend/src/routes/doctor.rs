@@ -3,6 +3,7 @@ use crate::{
     error::Error,
     models::{Patient, Role, Room, Speciality, User},
 };
+use argon2::{password_hash::SaltString, Argon2, PasswordHasher};
 use axum::{
     extract::{Path, Query, State},
     http::StatusCode,
@@ -10,12 +11,81 @@ use axum::{
     Json,
 };
 use itertools::Itertools;
+use rand::rngs::OsRng;
 use serde::{Deserialize, Serialize};
 use sqlx::{query, query_as};
 use std::collections::BTreeMap;
 use time::{Duration, OffsetDateTime, Time, Weekday};
 use tower_sessions::Session;
 use utoipa::{IntoParams, ToSchema};
+
+#[derive(ToSchema, Deserialize)]
+pub struct CreateDoctor {
+    pub first_name: String,
+    pub last_name: String,
+    pub middle_name: Option<String>,
+    pub phone_number: String,
+    pub experience: i32,
+    pub speciality_id: i32,
+    pub password: String,
+}
+
+/// Add new doctor
+#[utoipa::path(
+    post,
+    path = "/doctor",
+    request_body = CreateBody,
+    responses(
+        (status = 200, description = "Successfully created new doctor record", body = i32),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
+pub async fn create(
+    session: Session,
+    State(state): RouteState,
+    Json(data): Json<CreateDoctor>,
+) -> RouteResult {
+    assert_role(&session, &[Role::Admin]).await?;
+
+    let mut tx = state.db.begin().await?;
+
+    let password_hash = Argon2::default()
+        .hash_password(data.password.as_bytes(), &SaltString::generate(OsRng))
+        .unwrap()
+        .to_string();
+
+    let id = query!(
+        r#"INSERT INTO Account(
+        first_name, last_name,
+        middle_name, phone_number,
+        role, password_hash
+    ) VALUES($1, $2, $3, $4, 'doctor', $5) RETURNING id"#,
+        data.first_name,
+        data.last_name,
+        data.middle_name,
+        data.phone_number,
+        password_hash
+    )
+    .fetch_one(&mut *tx)
+    .await?
+    .id;
+
+    query!(
+        r#"INSERT INTO Doctor(
+            account_id, experience, speciality_id
+        ) VALUES ($1, $2, $3)"#,
+        id,
+        data.experience,
+        data.speciality_id
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await?;
+
+    Ok(())
+}
 
 /// Get doctor by id
 #[utoipa::path(
