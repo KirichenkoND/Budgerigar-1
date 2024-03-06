@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import DoctorCard from './DoctorCard';
 import Popup from '../Popup/Popup';
 
-import './DoctorList.scss'
+import defailt_avatar from '../../../public/user.svg';
 import Button from '../../UI/Button/Button';
+
+import './DoctorList.scss';
 
 interface DoctorListProps {
   doctors: {
@@ -61,14 +63,22 @@ const DoctorList: React.FC<DoctorListProps> = ({ doctors }) => {
 
   return (
     <div className="doctor-list">
-      <h2>Список врачей</h2>
-      <div className="doctor-cards-container">
-        {currentDoctors.map((doctor, index) => (
-          <div className="doctor-card" key={index} onClick={() => handleDoctorClick(doctor)}>
-            <DoctorCard {...doctor} />
-          </div>
-        ))}
-      </div>
+            <h2>Список врачей</h2>
+            <div className="doctor-cards-container">
+                {currentDoctors.map((doctor, index) => (
+                    <div className="doctor-card-item" key={index} onClick={() => handleDoctorClick(doctor)}>
+                        <div className="doctor-info">
+                            <div className="doctor-avatar">
+                            <img src={defailt_avatar}></img>
+                            </div>
+                            <div className='doctor-info1'>
+                                <p><strong>ФИО:</strong> {doctor.name}</p>
+                                <p><strong>Специализация:</strong> {doctor.specialization}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
       <div className="pagination">
         <Button text="Previous" onClick={prevPage} disabled={currentPage === 1} />

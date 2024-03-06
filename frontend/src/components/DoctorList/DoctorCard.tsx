@@ -1,4 +1,5 @@
 import React from 'react';
+import './DoctorCard.scss';
 
 interface DoctorCardProps {
     id: number;
