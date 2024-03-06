@@ -35,14 +35,46 @@
 }
 
 .patient-info {
-    /* ... */
+    margin-left: 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    // justify-content: center;
     align-items:center;
-    gap: 50px;
+    // gap: 50px;
 }
 
 .patient-info1 {
-     /* ... */
+    display: flex;
+    justify-content: center;
+    align-items:flex-start;
+    flex-direction: column;
+    // float: left;
+}
+.patient-info1 > p {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.patient-avatar {
+    // margin-left: 3vw;
+    margin-right: 3vw;
+}
+
+.scroll-list {
+    max-height: 300px; 
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}
+
+.sessions-list {
+    padding: 10px;
+}
+
+.session-item {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    p {
+        margin: 0;
+    }
 }
