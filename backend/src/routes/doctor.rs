@@ -34,7 +34,7 @@ pub struct CreateDoctor {
 #[utoipa::path(
     post,
     path = "/doctor",
-    request_body = CreateBody,
+    request_body = CreateDoctor,
     responses(
         (status = 200, description = "Successfully created new doctor record", body = i32),
         (status = 401, description = "Request is not authorized"),

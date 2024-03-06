@@ -9,8 +9,77 @@ use axum::{
     Json,
 };
 use serde::Deserialize;
+use sqlx::query;
+use time::OffsetDateTime;
 use tower_sessions::Session;
-use utoipa::IntoParams;
+use utoipa::{IntoParams, ToSchema};
+
+#[derive(ToSchema, Deserialize)]
+pub struct CreatePatient {
+    pub first_name: String,
+    pub last_name: String,
+    pub middle_name: Option<String>,
+    pub phone_number: String,
+    #[serde(with = "time::serde::rfc3339")]
+    pub date_of_birth: OffsetDateTime,
+    pub male: bool,
+    pub address: String,
+    /// номер договора
+    pub contract_id: i32,
+}
+
+/// Add new patient
+#[utoipa::path(
+    post,
+    path = "/patient",
+    request_body = CreatePatient,
+    responses(
+        (status = 200, description = "Successfully created new patient record"),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
+pub async fn create(
+    session: Session,
+    State(state): RouteState,
+    Json(data): Json<CreatePatient>,
+) -> RouteResult {
+    assert_role(&session, &[Role::Admin]).await?;
+
+    let mut tx = state.db.begin().await?;
+
+    let id = query!(
+        r#"INSERT INTO Account(
+        first_name, last_name,
+        middle_name, phone_number,
+        role
+    ) VALUES($1, $2, $3, $4, 'patient') RETURNING id"#,
+        data.first_name,
+        data.last_name,
+        data.middle_name,
+        data.phone_number,
+    )
+    .fetch_one(&mut *tx)
+    .await?
+    .id;
+
+    query!(
+        r#"INSERT INTO Patient(
+            account_id, male, date_of_birth, contract_id, address
+        ) VALUES ($1, $2, $3, $4, $5)"#,
+        id,
+        data.male,
+        data.date_of_birth,
+        data.contract_id,
+        data.address
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    tx.commit().await?;
+
+    Ok(())
+}
 
 #[derive(IntoParams, Deserialize)]
 pub struct GetPatientQuery {
