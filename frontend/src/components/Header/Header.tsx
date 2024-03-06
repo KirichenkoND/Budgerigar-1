@@ -15,7 +15,7 @@ const HeaderLinks = [
     path: "/patients",
   },
   {
-    text: "Доктора",
+    text: "Врачи",
     path: "/doctors",
   },
   {
