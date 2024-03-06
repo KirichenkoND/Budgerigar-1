@@ -151,7 +151,8 @@ async fn main() -> Result<(), error::Error> {
         .route("/appointment/:id", patch(routes::appointment::update))
         .merge(swagger)
         .with_state(state)
-        .layer(session_layer);
+        .layer(session_layer)
+        .layer(tower_http::cors::CorsLayer::very_permissive());
 
     let listener = TcpListener::bind("0.0.0.0:9000").await?;
     info!("Listening at {}", listener.local_addr()?);
