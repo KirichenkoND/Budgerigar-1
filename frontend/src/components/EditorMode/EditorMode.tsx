@@ -28,6 +28,16 @@ const administartorFields = [
   { label: "Биба:", type: "text" },
 ];
 
+const receptionFields = [
+  { label: "Фамилия:", type: "text" },
+  { label: "Имя:", type: "text" },
+  { label: "Отчество:", type: "text" },
+  { label: "Дата рождения:", type: "text" },
+  { label: "Биба:", type: "text" },
+  { label: "БумаБум:", type: "text" },
+
+];
+
 const radioButtonUsers = [
   { text: "Пациент", value: "Patient", fields: patientFields },
   { text: "Врач", value: "Doctor", fields: doctorFields },
@@ -36,7 +46,13 @@ const radioButtonUsers = [
     value: "Administartor",
     fields: administartorFields,
   },
+  {
+    text: "Регистратура",
+    value: "Reception",
+    fields: receptionFields,
+  },
 ];
+
 
 type User = "Patient" | "Doctor" | "Administartor" | "";
 
