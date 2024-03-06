@@ -2,7 +2,7 @@
 
 CREATE TYPE ROLE AS ENUM('patient', 'doctor', 'admin', 'receptionist');
 
-CREATE TABLE Account(
+CREATE TABLE IF NOT EXISTS Account(
     id SERIAL PRIMARY KEY,
     role ROLE NOT NULL,
     first_name VARCHAR(32) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE Account(
     password_hash VARCHAR(255)
 );
 
-CREATE TABLE Patient(
+CREATE TABLE IF NOT EXISTS Patient(
     account_id INTEGER REFERENCES Account NOT NULL,
     date_of_birth TIMESTAMPTZ NOT NULL,
     address VARCHAR(255) NOT NULL,
@@ -23,23 +23,23 @@ CREATE TABLE Patient(
     PRIMARY KEY (account_id)
 );
 
-CREATE TABLE Speciality(
+CREATE TABLE IF NOT EXISTS Speciality(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE Facility(
+CREATE TABLE IF NOT EXISTS Facility(
     id SERIAL PRIMARY KEY,
     address VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE Room(
+CREATE TABLE IF NOT EXISTS Room(
     id SERIAL PRIMARY KEY,
     label VARCHAR(32) NOT NULL,
     facility_id INTEGER REFERENCES Facility NOT NULL
 );
 
-CREATE TABLE Doctor(
+CREATE TABLE IF NOT EXISTS Doctor(
     account_id INTEGER NOT NULL REFERENCES Account,
     experience INTEGER NOT NULL DEFAULT 0,
     speciality_id INTEGER NOT NULL REFERENCES Speciality,
@@ -48,7 +48,7 @@ CREATE TABLE Doctor(
     PRIMARY KEY (account_id)
 );
 
-CREATE TABLE Appointment(
+CREATE TABLE IF NOT EXISTS Appointment(
     id SERIAL PRIMARY KEY,
     doctor_id INTEGER NOT NULL REFERENCES Doctor,
     patient_id INTEGER NOT NULL REFERENCES Patient,

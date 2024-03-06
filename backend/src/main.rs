@@ -1,5 +1,5 @@
 use axum::{extract::FromRef, routing::*};
-use sqlx::PgPool;
+use sqlx::{migrate, PgPool};
 use std::env::var;
 use time::Duration;
 use tokio::net::TcpListener;
@@ -63,6 +63,8 @@ async fn main() -> Result<(), error::Error> {
 
     info!("Connecting to db");
     let db = PgPool::connect(&var("DATABASE_URL").expect("env `DATABASE_URL` is required")).await?;
+
+    migrate!("./migrations").run(&db).await.unwrap();
 
     let state = AppState { db: db.clone() };
 

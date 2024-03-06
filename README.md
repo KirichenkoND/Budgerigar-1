@@ -44,3 +44,10 @@
 
 1. Медкарта пациента
 ![Alt-текст](img/patient.png "Медкарта пациента")
+
+# Сбор контейнера backend
+```
+cd backend
+docker build -t hospital-backend .
+docker run --name hospital-backend -e DATABASE_URL=<postgres_url> -d -p 9000:9000 hospital-backend
+```
