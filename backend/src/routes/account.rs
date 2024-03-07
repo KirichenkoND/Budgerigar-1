@@ -12,7 +12,7 @@ use axum::{
 use itertools::Itertools;
 use rand::rngs::OsRng;
 use serde::Deserialize;
-use sqlx::{query, query_as};
+use sqlx::query;
 use tower_sessions::Session;
 use tracing::info;
 use utoipa::{IntoParams, ToSchema};
@@ -20,7 +20,7 @@ use utoipa::{IntoParams, ToSchema};
 #[derive(IntoParams, Deserialize)]
 pub struct FetchAccount {
     name: Option<String>,
-    role: String,
+    role: Option<String>,
     count: Option<i64>,
     offset: Option<i64>,
 }
@@ -32,8 +32,8 @@ pub async fn fetch(
 ) -> RouteResult<Json<Vec<User>>> {
     assert_role(&session, &[Role::Admin]).await?;
 
-    let role = query.role.to_lowercase();
-    if !matches!(role.as_str(), "admin" | "receptionist") {
+    let role = query.role.map(|r| r.to_lowercase());
+    if !matches!(role.as_deref(), Some("admin") | Some("receptionist") | None) {
         return Err(Error::custom(StatusCode::BAD_REQUEST, "role is invalid"));
     }
 
@@ -41,7 +41,7 @@ pub async fn fetch(
         r#"SELECT id, first_name, last_name, middle_name,
         role as "role: Role", phone_number
         FROM Account
-        WHERE role = ($1::text)::role
+        WHERE ((role = ($1::text)::role OR $1 IS NULL) AND role != 'doctor' AND role != 'patient') 
         AND ((first_name || last_name || middle_name) LIKE ('%' || $2 || '%') OR $2 IS NULL)
         LIMIT $3 OFFSET $4"#,
         role,
