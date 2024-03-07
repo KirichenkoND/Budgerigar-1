@@ -20,7 +20,6 @@ const Router = () => {
                     <Route path='/auth' element={<AuthPage />} />
                     <Route path='/editor' element={<EditorPage />} />
                     <Route path='/test' element={<TestComponentPage />} />
-
                     <Route path='*' element={<NotFound message="404 Not Found" />} />
                 </Routes>
             </BrowserRouter>
