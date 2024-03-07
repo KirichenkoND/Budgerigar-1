@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import PatientCard from '../../components/PatientList/PatientCard';
+import PatientCard, { Sessions } from '../../components/PatientList/PatientCard';
 
 interface PatientCardPageProps {
   patients: { 
@@ -10,7 +10,8 @@ interface PatientCardPageProps {
     gender: string;
     age: number;
     insuranceNumber: string;
-    lastvisitdate: string; 
+    lastvisitdate: string;
+    sessions: Sessions[];
     report: string;
     diagnosis: string }[];
 }
