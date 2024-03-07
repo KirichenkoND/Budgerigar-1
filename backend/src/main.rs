@@ -123,7 +123,10 @@ async fn main() -> Result<(), error::Error> {
         .route("/account/login", post(routes::account::login))
         .route("/account/logout", post(routes::account::logout))
         .route("/account/me", get(routes::account::me))
-        .route("/account", post(routes::account::create))
+        .route(
+            "/account",
+            post(routes::account::create).get(routes::account::fetch),
+        )
         .route(
             "/speciality",
             get(routes::speciality::get).post(routes::speciality::create),

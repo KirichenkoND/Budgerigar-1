@@ -1,16 +1,75 @@
 use super::{assert_role, RouteResult, RouteState};
 use crate::{
     error::Error,
-    models::{Role, User},
+    models::{Class, Role, User},
 };
 use argon2::{password_hash::SaltString, Argon2, PasswordHasher, PasswordVerifier};
-use axum::{extract::State, http::StatusCode, Json};
+use axum::{
+    extract::{Query, State},
+    http::StatusCode,
+    Json,
+};
+use itertools::Itertools;
 use rand::rngs::OsRng;
 use serde::Deserialize;
-use sqlx::query;
+use sqlx::{query, query_as};
 use tower_sessions::Session;
 use tracing::info;
-use utoipa::ToSchema;
+use utoipa::{IntoParams, ToSchema};
+
+#[derive(IntoParams, Deserialize)]
+pub struct FetchAccount {
+    name: Option<String>,
+    role: String,
+    count: Option<i64>,
+    offset: Option<i64>,
+}
+
+pub async fn fetch(
+    session: Session,
+    Query(query): Query<FetchAccount>,
+    State(state): RouteState,
+) -> RouteResult<Json<Vec<User>>> {
+    assert_role(&session, &[Role::Admin]).await?;
+
+    let role = query.role.to_lowercase();
+    if !matches!(role.as_str(), "admin" | "receptionist") {
+        return Err(Error::custom(StatusCode::BAD_REQUEST, "role is invalid"));
+    }
+
+    let results = query!(
+        r#"SELECT id, first_name, last_name, middle_name,
+        role as "role: Role", phone_number
+        FROM Account
+        WHERE role = ($1::text)::role
+        AND ((first_name || last_name || middle_name) LIKE ('%' || $2 || '%') OR $2 IS NULL)
+        LIMIT $3 OFFSET $4"#,
+        role,
+        query.name,
+        query.count.unwrap_or(10).max(0),
+        query.offset.unwrap_or(0)
+    )
+    .fetch_all(&state.db)
+    .await?;
+
+    let users = results
+        .into_iter()
+        .map(|r| User {
+            id: r.id,
+            phone_number: r.phone_number,
+            first_name: r.first_name,
+            last_name: r.last_name,
+            middle_name: r.middle_name,
+            class: match r.role {
+                Role::Admin => Class::Admin,
+                Role::Receptionist => Class::Receptionist,
+                _ => unreachable!(),
+            },
+        })
+        .collect_vec();
+
+    Ok(Json(users))
+}
 
 #[derive(ToSchema, Deserialize)]
 pub struct CreateAccount {
