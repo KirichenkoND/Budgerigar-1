@@ -80,6 +80,7 @@ async fn main() -> Result<(), error::Error> {
             routes::account::login,
             routes::account::logout,
             routes::account::me,
+            routes::account::create,
             routes::facility::get,
             routes::facility::create,
             routes::facility::rooms,
@@ -110,7 +111,8 @@ async fn main() -> Result<(), error::Error> {
             routes::account::Credentials,
             routes::doctor::Statistics,
             routes::doctor::CreateDoctor,
-            routes::patient::CreatePatient
+            routes::patient::CreatePatient,
+            routes::account::CreateAccount,
         ))
     )]
     struct ApiDoc;
@@ -121,6 +123,7 @@ async fn main() -> Result<(), error::Error> {
         .route("/account/login", post(routes::account::login))
         .route("/account/logout", post(routes::account::logout))
         .route("/account/me", get(routes::account::me))
+        .route("/account", post(routes::account::create))
         .route(
             "/speciality",
             get(routes::speciality::get).post(routes::speciality::create),

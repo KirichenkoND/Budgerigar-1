@@ -1,15 +1,71 @@
-use super::{RouteResult, RouteState};
+use super::{assert_role, RouteResult, RouteState};
 use crate::{
     error::Error,
     models::{Role, User},
 };
-use argon2::{Argon2, PasswordVerifier};
-use axum::{extract::State, Json};
+use argon2::{password_hash::SaltString, Argon2, PasswordHasher, PasswordVerifier};
+use axum::{extract::State, http::StatusCode, Json};
+use rand::rngs::OsRng;
 use serde::Deserialize;
 use sqlx::query;
 use tower_sessions::Session;
 use tracing::info;
 use utoipa::ToSchema;
+
+#[derive(ToSchema, Deserialize)]
+pub struct CreateAccount {
+    first_name: String,
+    last_name: String,
+    middle_name: Option<String>,
+    phone_number: String,
+    password: String,
+    role: String,
+}
+
+/// Create new account
+#[utoipa::path(
+    post,
+    path = "/account",
+    request_body = CreateAccount,
+    responses(
+        (status = 200, description = "Logged in successfully"),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is not admin")
+    )
+)]
+pub async fn create(
+    session: Session,
+    State(state): RouteState,
+    Json(data): Json<CreateAccount>,
+) -> RouteResult {
+    assert_role(&session, &[Role::Admin]).await?;
+
+    let role = data.role.to_lowercase();
+    if role != "admin" && role != "receptionist" {
+        return Err(Error::custom(StatusCode::BAD_REQUEST, "role is invalid"));
+    }
+
+    let password_hash = Argon2::default()
+        .hash_password(data.password.as_bytes(), &SaltString::generate(OsRng))
+        .unwrap()
+        .to_string();
+
+    query!(
+        "INSERT INTO Account(
+            role, first_name, last_name, middle_name, phone_number, password_hash
+        ) VALUES(($1::text)::role, $2, $3, $4, $5, $6)",
+        role,
+        data.first_name,
+        data.last_name,
+        data.middle_name,
+        data.phone_number,
+        password_hash
+    )
+    .execute(&state.db)
+    .await?;
+
+    Ok(())
+}
 
 #[derive(ToSchema, Debug, Deserialize)]
 pub struct Credentials {
