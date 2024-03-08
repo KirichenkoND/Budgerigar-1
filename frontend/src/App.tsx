@@ -17,7 +17,7 @@ function App() {
   }
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setUser({ phone: data.phone_number }));
+      dispatch(setUser({ phone: data.phone_number, role: data.role }));
     }
   }, [data]);
   return (

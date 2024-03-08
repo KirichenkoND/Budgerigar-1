@@ -29,7 +29,7 @@ const Auth: React.FC = () => {
   }, [credentials]);
 
   if (isSuccess) {
-    dispatch(setUser({phone}))
+    dispatch(setUser({phone, role: 'receptionist' }))
     navigate("/");
   }
 
