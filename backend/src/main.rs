@@ -100,6 +100,7 @@ async fn main() -> Result<(), error::Error> {
             routes::patient::create,
             routes::appointment::get,
             routes::appointment::update,
+            routes::doctor::delete
         ),
         components(schemas(
             models::Facility,
@@ -145,7 +146,10 @@ async fn main() -> Result<(), error::Error> {
         .route("/doctor/:id/patients", get(routes::doctor::patients))
         .route("/doctor/:id/stats", get(routes::doctor::stats))
         .route("/doctor/:id/schedule", get(routes::doctor::schedule))
-        .route("/doctor/:id", get(routes::doctor::get_by_id))
+        .route(
+            "/doctor/:id",
+            get(routes::doctor::get_by_id).delete(routes::doctor::delete),
+        )
         .route(
             "/doctor/:id/appointment/:patient_id",
             post(routes::doctor::appointment),

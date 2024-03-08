@@ -30,6 +30,38 @@ pub struct CreateDoctor {
     pub password: String,
 }
 
+/// Deletes doctor
+#[utoipa::path(
+    delete,
+    path = "/doctor/:id",
+    params(
+        ("id" = i32, Path, description = "Id of the doctor to delete")
+    ),
+    responses(
+        (status = 200, description = "Successfully deleted doctor"),
+        (status = 401, description = "Request is not authorized"),
+        (status = 403, description = "User is forbidden from accessing facility information")
+    )
+)]
+pub async fn delete(
+    session: Session,
+    State(state): RouteState,
+    Path(id): Path<i32>,
+) -> RouteResult {
+    assert_role(&session, &[Role::Admin]).await?;
+
+    let mut tx = state.db.begin().await?;
+    query!("DELETE FROM Doctor WHERE account_id = $1", id)
+        .execute(&mut *tx)
+        .await?;
+    query!("DELETE FROM Account WHERE id = $1", id)
+        .execute(&mut *tx)
+        .await?;
+    tx.commit().await?;
+
+    Ok(())
+}
+
 /// Add new doctor
 #[utoipa::path(
     post,
