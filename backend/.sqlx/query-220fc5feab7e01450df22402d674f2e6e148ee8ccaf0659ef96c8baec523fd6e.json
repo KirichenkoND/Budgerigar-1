@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO Patient(\n            account_id, male, date_of_birth, contract_id, address\n        ) VALUES ($1, $2, $3, $4, $5)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Bool",
+        "Timestamptz",
+        "Int4",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "220fc5feab7e01450df22402d674f2e6e148ee8ccaf0659ef96c8baec523fd6e"
+}

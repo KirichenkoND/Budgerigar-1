@@ -1,0 +1,83 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n        Patient.account_id as id, first_name, last_name, middle_name, details,\n        phone_number, male, address, date_of_birth, contract_id,\n        appointment.time as last_appointment\n        FROM Appointment\n        JOIN Patient ON Patient.account_id = Appointment.patient_id\n        JOIN Account ON Account.id = Patient.account_id\n        WHERE doctor_id = $1 AND\n        (LOWER(first_name || last_name || middle_name) LIKE ('%' || $2 || '%') OR ($2 IS NULL)) AND\n        appointment.time < CURRENT_TIMESTAMP",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "first_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "last_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "middle_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "details",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "phone_number",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "male",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 7,
+        "name": "address",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "date_of_birth",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "contract_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "last_appointment",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "fc26d33472ac11e342952b62f4ab5f29bf75f1860935b54b67afb9ed162a2e03"
+}

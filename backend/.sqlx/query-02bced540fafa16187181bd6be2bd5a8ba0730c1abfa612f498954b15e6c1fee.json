@@ -1,0 +1,25 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO Account(\n        first_name, last_name,\n        middle_name, phone_number,\n        role\n    ) VALUES($1, $2, $3, $4, 'patient') RETURNING id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "02bced540fafa16187181bd6be2bd5a8ba0730c1abfa612f498954b15e6c1fee"
+}

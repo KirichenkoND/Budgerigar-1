@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO Doctor(\n            account_id, experience, speciality_id\n        ) VALUES ($1, $2, $3)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a60111d9a444cb5c38abdaeff51d515a4f42b0989642ff63f0f173f05aba1fc1"
+}

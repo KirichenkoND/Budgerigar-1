@@ -1,0 +1,60 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE Appointment SET\n        diagnosis = CASE WHEN $1::text IS NULL THEN diagnosis ELSE $1 END,\n        complaint = CASE WHEN $2::text IS NULL THEN complaint ELSE $2 END\n        WHERE id = $3\n        RETURNING *",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "doctor_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "patient_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 4,
+        "name": "time",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 5,
+        "name": "complaint",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "diagnosis",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "12b84b6a529b3497a3e053844bd260651d45da3a5179aef48bc12fdf2d1351d1"
+}
