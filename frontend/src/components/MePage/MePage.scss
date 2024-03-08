@@ -1,0 +1,38 @@
+.MeContainer {
+    margin-left: 15%;
+    margin-right: 15%;
+    background-color: aqua;
+
+    display: flex;
+
+    height: 90vh;
+}
+
+.MeData {
+    background-color: beige;
+    justify-content: center;
+}
+
+.MeAside {
+    background-color: blueviolet;
+    display: flex;
+    flex-direction: column;
+}
+
+.Meinfo {
+    background-color: burlywood;
+}
+
+.MeInfoContainer {
+    display: flex;
+    margin: 5%;
+
+    flex-wrap:wrap;
+}
+
+.MeInfoWrapper {
+    display: flex;
+    background-color:brown;
+    flex: 1;
+    margin: 5px;
+}
