@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO Account(\n            role, first_name, last_name, middle_name, phone_number, password_hash\n        ) VALUES(($1::text)::role, $2, $3, $4, $5, $6)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "cae5a227e55e5e91ddaf1afa880fc05996971db6aa35c2af402c1f352c943d55"
+}

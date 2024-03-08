@@ -1,4 +1,4 @@
-FROM rust
+FROM rust AS build
 
 WORKDIR /app
 
@@ -14,4 +14,10 @@ COPY ./src ./src
 
 RUN cargo build --release
 
-CMD [ "./target/release/backend" ]
+FROM debian
+
+WORKDIR /app
+
+COPY --from=build /app/target/release/backend ./hospital
+
+CMD [ "./hospital" ]
