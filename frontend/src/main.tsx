@@ -14,6 +14,7 @@ import EditorPage from "./Pages/EditorPage/EditorPage.tsx";
 import TestComponentPage from "./Pages/TestComponentPage/TestComponentPage.tsx";
 import NotFound from "./components/NotFound/NotFound.tsx";
 import MainPage from "./Pages/MainPage/MainPage.tsx";
+import MePage from "./components/MePage/MePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: '/editor',
         element: <EditorPage />
+      },
+      {
+        path: '/me',
+        element: <MePage />
       },
       {
         path: '/test',
