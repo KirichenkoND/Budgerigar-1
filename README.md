@@ -26,13 +26,12 @@
 ![Alt-текст](img/database.jpg "Схема Базы данных")
 
 # API и SWAGGER
-*В процессе разработки*
+Swagger расположен по следующей ссылке: [*swagger*](http://psyhospital.efbo.ru:9009/swagger-ui/)
 
 # Макет веб-приложения
 Макет веб-приложения расположен по следующей ссылке [*макет*](https://www.figma.com/file/0ZRSijy5h8b0xTVLDtl7Pj/%D0%9F%D0%BE%D0%BB%D0%B8%D0%BA%D0%BB%D0%B8%D0%BD%D0%B8%D0%BA%D0%B0?type=design&node-id=0-1&mode=design&t=rnU5u2QP7wvDrIpP-0)
 
 ## Описание макетов приложения
-
 1. Авторизация
 ![Alt-текст](img/auth.png "Авторизация")
 
@@ -44,3 +43,20 @@
 
 1. Медкарта пациента
 ![Alt-текст](img/patient.png "Медкарта пациента")
+
+# Docker
+Для сборки проекта необходимо скачать и установить docker
+
+# Сбор контейнера backend в Docker
+```
+cd backend
+docker build -t hospital-backend .
+docker run --name hospital-backend -e DATABASE_URL=<postgres_url> -d -p 9009:9000 hospital-backend
+```
+
+# Сбор контейнера frontend в Docker
+```
+cd frontend
+docker build -t hospital-frontend .
+docker run --name hospital-frontend -d -p 30000:3000 hospital-frontend
+```
