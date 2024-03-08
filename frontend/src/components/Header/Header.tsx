@@ -6,6 +6,7 @@ import logo from "../../../public/vite.svg";
 import logo_1 from "../../../public/user.svg";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { delUser} from "../../store/slices/userSlice";
+import { useLogoutMutation } from "../../api/api";
 
 const HeaderLinks = [
   {
@@ -29,8 +30,10 @@ const HeaderLinks = [
 export const Header: FC = () => {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
+  const [logoutFetch] = useLogoutMutation({});
 
   const logout = useCallback(() => {
+    logoutFetch({})
     dispatch(delUser());
   }, []);
   return (

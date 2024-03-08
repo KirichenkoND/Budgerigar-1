@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Button from "../../UI/Button/Button";
 import Input from "../../UI/Input/Input";
-import { store, useAppDispatch } from "../../store/store";
+import { useAppDispatch } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../../store/slices/userSlice";
 import { ILogin } from "../../api/interfaces";
@@ -34,7 +34,6 @@ const Auth: React.FC = () => {
   }
 
   return (
-    <>
       <div className="container">
         {(isLoading && "Жди, ты грузишься, сори я устал поэтому без лоудера") ||
           <>
@@ -73,7 +72,6 @@ const Auth: React.FC = () => {
         }
         {isError && "Не валидный номер телефона или пароль"}
       </div>
-    </>
   );
 };
 

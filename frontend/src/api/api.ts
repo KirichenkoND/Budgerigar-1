@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { IProfile } from './interfaces';
+
+export const baseURL = "http://localhost:3000/api";
 
 interface User {
     phone: string;
     password: string;
 }
-
-const baseURL = "http://45.132.50.201:9009";
 
 export const authApi = createApi({
     reducerPath: 'authApi',
@@ -24,7 +25,10 @@ export const authApi = createApi({
                 method: 'POST'
             }),
         }),
+        me: builder.query<IProfile, any>({
+            query: () => `/account/me`,
+        }),
     })
 })
 
-export const { useLoginMutation, useLogoutMutation } = authApi;
+export const { useLoginMutation, useLogoutMutation, useMeQuery } = authApi;

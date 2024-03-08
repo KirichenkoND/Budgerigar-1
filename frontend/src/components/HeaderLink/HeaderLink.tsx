@@ -1,6 +1,5 @@
 import React from 'react';
 import "./HeaderLink.scss"
-import { Link } from 'react-router-dom';
 
 interface HeaderLinkProps {
     image?: string;
