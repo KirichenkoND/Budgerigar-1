@@ -92,22 +92,6 @@ export const EditorMode: React.FC = () => {
           <div className="switcher">
             <span>Добавить врача</span>
             <div className="switcher-buttons">
-              {radioButtonUsers.map((user) => {
-                return (
-                  <>
-                    <div>
-                      {/* <span className="user-name">{user.text}</span> */}
-                      {/* <input
-                        key={user.value}
-                        type="radio"
-                        name="user"
-                        value={user.value}
-                        onClick={() => setUserType(user.value)}
-                      /> */}
-                    </div>
-                  </>
-                );
-              })}
             </div>
           </div>
           <div>

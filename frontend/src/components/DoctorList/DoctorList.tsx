@@ -1,95 +1,85 @@
-import React, { useState } from 'react';
-import DoctorCard from './DoctorCard';
-import Popup from '../Popup/Popup';
+import React, { useCallback, useState } from "react";
+import DoctorCard from "./DoctorCard";
+import Popup from "../Popup/Popup";
 
-import defailt_avatar from '../../../public/user.svg';
-import Button from '../../UI/Button/Button';
+import "./DoctorList.scss";
+import {
+  useGetDoctorsQuery,
+  useGetDoctorsSheduleQuery,
+} from "../../api/doctorsApi";
+import { IDoctor } from "../../Pages/DoctorListPage/DoctorListPage";
+import { PatientCardBuba } from "../PatientCardForList/PatientCard";
+import Button from "../../UI/Button/Button";
+import DoctorShedulePopUp from "./DoctorShedulePopUp";
+import Input from "../../UI/Input/Input";
 
-import './DoctorList.scss';
-
-interface DoctorListProps {
-  doctors: {
-    id: number;
-    name: string;
-    category: string;
-    experience: number;
-    age: number;
-    specialization: string;
-    area: string;
-    schedule: string;
-    office: string;
-    appointmentSchedule: string;
-  }[];
-}
-
-const DoctorList: React.FC<DoctorListProps> = ({ doctors }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedDoctor, setSelectedDoctor] = useState<{
-    id: number;
-    name: string;
-    category: string;
-    experience: number;
-    age: number;
-    specialization: string;
-    area: string;
-    schedule: string;
-    office: string;
-    appointmentSchedule: string;
-  } | null>(null);
+const DoctorList: React.FC = () => {
+  const { data, isError, isLoading, isSuccess } = useGetDoctorsQuery({});
+  const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | null>(null);
+  const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-
-  const doctorsPerPage = 2;
-  const indexOfLastDoctor = currentPage * doctorsPerPage;
-  const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
-  const currentDoctors = doctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
-  const totalPages = Math.ceil(doctors.length / doctorsPerPage);
-
-  const nextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
-  const prevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleDoctorClick = (doctor: typeof doctors[number]) => {
-    setSelectedDoctor(doctor);
-    setIsPopupOpen(true);
-  };
+  const [find, setFind] = useState("");
+  const [isPopupOpenSchedule, setIsPopupOpenSchedule] = useState(false);
+  const handlePatientToggler = useCallback(
+    (doctor: IDoctor) => {
+      setSelectedDoctor(doctor);
+      setIsPopupOpen(!isPopupOpen);
+    },
+    [isPopupOpen]
+  );
 
   const handleClosePopup = () => {
+    setSelectedDoctor(null);
+    setSelectedDoctorId(null);
     setIsPopupOpen(false);
   };
 
-  return (
-    <div className="doctor-list">
-            <h2>Список врачей</h2>
-            <div className="doctor-cards-container">
-                {currentDoctors.map((doctor, index) => (
-                    <div className="doctor-card-item" key={index} onClick={() => handleDoctorClick(doctor)}>
-                        <div className="doctor-info">
-                            <div className="doctor-avatar">
-                            <img src={defailt_avatar}></img>
-                            </div>
-                            <div className='doctor-info1'>
-                                <p><strong>ФИО:</strong> {doctor.name}</p>
-                                <p><strong>Специализация:</strong> {doctor.specialization}</p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+  const handlePatientTogglerSchedule = useCallback((doctor: IDoctor) => {
+    setSelectedDoctorId(doctor.id)
+    setIsPopupOpenSchedule(!isPopupOpenSchedule);
+  }, [isPopupOpenSchedule]);
 
-      <div className="pagination">
-        <Button text="Previous" onClick={prevPage} disabled={currentPage === 1} />
-        <span>{currentPage} / {totalPages}</span>
-        <Button text="Next" onClick={nextPage} disabled={currentPage === totalPages} />
-      </div>
-      <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
-        {selectedDoctor && <DoctorCard {...selectedDoctor} />}
-      </Popup>
-    </div>
-  );
-}
+  if (isError) {
+    throw new Error("ошыбка чекни инет");
+  }
+  if (isLoading) {
+    return <>{"Здесь лоадер должен был быц, хехе"}</>;
+  }
+  if (isSuccess) {
+    return (
+      <>
+        <h2>Список врачей</h2>
+        <div>
+        <Input onChange={(e) => setFind(e.target.value)} value={find}/>
+        <Button text="Поиск" onClick={() => console.log(find)}/>
+        </div>
+        {data.map((doctor: IDoctor, index: number) => {
+          return (
+            <div className="doctor-list">
+              <PatientCardBuba
+                {...doctor}
+                flag="doctor"
+                key={index + doctor.first_name}
+                first_name={doctor.first_name}
+                last_appointment={doctor.speciality.name}
+                last_name={doctor.last_name}
+                onClick={() => handlePatientToggler(doctor)}
+              />
+              <div style={{ marginLeft: "auto" }}>
+                <Button
+                  text={"Посмотреть расписание"}
+                  onClick={() => handlePatientTogglerSchedule(doctor)}
+                />
+              </div>
+              <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
+                {selectedDoctor && <DoctorCard {...selectedDoctor} /> || selectedDoctorId && <DoctorShedulePopUp id={doctor.id} /> }
+              </Popup>
+            </div>
+          );
+        })}
+      </>
+    );
+  }
+};
 
 export default DoctorList;

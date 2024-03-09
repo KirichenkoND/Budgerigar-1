@@ -5,7 +5,7 @@ import Button from "../../UI/Button/Button";
 import logo from "../../../public/vite.svg";
 import logo_1 from "../../../public/user.svg";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { delUser} from "../../store/slices/userSlice";
+import { delUser } from "../../store/slices/userSlice";
 import { useLogoutMutation } from "../../api/api";
 
 const HeaderLinks = [
@@ -33,7 +33,7 @@ export const Header: FC = () => {
   const [logoutFetch] = useLogoutMutation({});
 
   const logout = useCallback(() => {
-    logoutFetch({})
+    logoutFetch({});
     dispatch(delUser());
   }, []);
   return (
@@ -57,8 +57,10 @@ export const Header: FC = () => {
           <div className={user !== null ? `auth-button-user` : "auth-button"}>
             {user !== null ? (
               <>
-                <span style={{marginRight: 15}}>{user.phone}</span>
-                <img style={{marginRight: 10}}  src={logo_1} alt="account"/>
+                <a href="/me" style={{textDecoration: 'none'}}>
+                  <span style={{ marginRight: 15, textDecoration: 'none' }}>{user.phone}</span>
+                  <img style={{ marginRight: 10 }} src={logo_1} alt="account" />
+                </a>
                 <Button text={"Выйти"} onClick={logout} />
               </>
             ) : (

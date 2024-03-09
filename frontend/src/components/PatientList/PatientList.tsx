@@ -4,15 +4,17 @@ import Popup from "../Popup/Popup";
 import "./PatientList.scss";
 import { IGetPatients, useGetPatientQuery } from "../../api/patientApi";
 import {
-  IPatientCard,
   PatientCardBuba,
 } from "../PatientCardForList/PatientCard";
 import PatientCard from "./PatientCard";
+import Input from "../../UI/Input/Input";
+import Button from "../../UI/Button/Button";
 
 const PatientList: React.FC = () => {
   const { data, isError, isLoading, isSuccess } = useGetPatientQuery({});
   const [selectedPatient, setSelectedPatient] = useState<IGetPatients | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [find, setFind] = useState("");
   const handlePatientToggler = useCallback((patient: IGetPatients) => {
     setSelectedPatient(patient);
     setIsPopupOpen(!isPopupOpen);
@@ -33,11 +35,16 @@ const PatientList: React.FC = () => {
     return (
       <div className="patient-list">
         <h2>Список пациентов</h2>
+        <div>
+        <Input onChange={(e) => setFind(e.target.value)} value={find}/>
+        <Button text="Поиск" onClick={() => console.log(find)}/>
+        </div>
         {data.map((patient, index) => {
           return (
             <>
               <PatientCardBuba
                 {...patient}
+                flag="patient"
                 key={index + patient.first_name}
                 first_name={patient.first_name}
                 last_appointment={patient.last_appointment.slice(0, 10)}

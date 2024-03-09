@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL } from './api';
 
-export interface IGetDoctorsPayload {
-    name?: string;
-    speciality?: number;
-}
+// export interface IGetDoctorsPayload {
+//     name?: string;
+//     speciality?: number;
+// }
 
 export interface IGetDoctors {
     experience?: number;
@@ -16,14 +16,14 @@ export interface IGetDoctors {
     speciality_id?: number;
 }
 
-type TDoctors = IGetDoctors[]
+// type TDoctors = IGetDoctors[]
 
 export const doctorApi = createApi({
     reducerPath: 'doctorApi',
     baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
     endpoints: (builder) => ({
-        getDoctors: builder.query<TDoctors, IGetDoctorsPayload>({
-            query: ({ name, speciality }) => `/doctor?name=${name}&speciality=${speciality}`,
+        getDoctors: builder.query<any, any>({
+            query: () => `/doctor`,
         }),
         addDoctor: builder.mutation<any, any>({
             query: (credentials) => ({
@@ -31,8 +31,17 @@ export const doctorApi = createApi({
                 method: 'POST',
                 body: credentials,
             })
-        })
+        }),
+        deleteDoctor: builder.mutation<any, any>({
+            query: (credentials) => ({
+                url: `/doctor/${credentials.id}`,
+                method: 'DELETE',
+            })
+        }),
+        getDoctorsShedule: builder.query({
+            query: (id) => `/doctor/${id}/schedule`,
+        }),
     })
 })
 
-export const { useGetDoctorsQuery, useAddDoctorMutation } = doctorApi;
+export const { useGetDoctorsQuery, useAddDoctorMutation, useDeleteDoctorMutation, useGetDoctorsSheduleQuery } = doctorApi;
