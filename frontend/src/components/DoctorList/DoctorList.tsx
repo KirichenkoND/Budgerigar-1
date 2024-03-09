@@ -65,7 +65,7 @@ const DoctorList: React.FC = () => {
                 last_name={doctor.last_name}
                 onClick={() => handlePatientToggler(doctor)}
               />
-              <div style={{ marginLeft: "auto" }}>
+              <div style={{ margin: "auto" }}>
                 <Button
                   text={"Посмотреть расписание"}
                   onClick={() => handlePatientTogglerSchedule(doctor)}
