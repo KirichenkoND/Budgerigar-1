@@ -6,7 +6,7 @@ const MainPage = () => {
     return (
         <div className='main-title'>
             <h2>Новости</h2>
-            <MainPageCard />
+            {/* <MainPageCard /> */}
         </div>
     );
 };
