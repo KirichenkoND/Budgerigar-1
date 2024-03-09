@@ -55,7 +55,7 @@ const DoctorList: React.FC = () => {
         </div>
         {data.map((doctor: IDoctor, index: number) => {
           return (
-            <div className="doctor-list">
+            <div className="doctor-list" key={index}>
               <PatientCardBuba
                 {...doctor}
                 flag="doctor"
@@ -71,8 +71,9 @@ const DoctorList: React.FC = () => {
                   onClick={() => handlePatientTogglerSchedule(doctor)}
                 />
               </div>
+              {isPopupOpenSchedule && selectedDoctorId && <DoctorShedulePopUp id={selectedDoctorId} />}
               <Popup isOpen={isPopupOpen} onClose={handleClosePopup}>
-                {selectedDoctor && <DoctorCard {...selectedDoctor} /> || selectedDoctorId && <DoctorShedulePopUp id={doctor.id} /> }
+                {selectedDoctor && <DoctorCard {...selectedDoctor} /> || selectedDoctorId && <DoctorShedulePopUp id={selectedDoctorId} /> }
               </Popup>
             </div>
           );
