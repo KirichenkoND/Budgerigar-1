@@ -1,0 +1,16 @@
+.MainPageCard {
+    margin-left: 15%;
+    margin-right: 15%;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color:antiquewhite;
+    gap:20px;
+}
+
+.test {
+    display:flex;
+    align-items: center;
+    border: 1px solid #ccc;
+}

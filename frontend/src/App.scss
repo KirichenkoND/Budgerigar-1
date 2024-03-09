@@ -1,0 +1,18 @@
+#root {
+  text-align: center;
+}
+
+.app {
+  display: flex;
+}
+
+.app-info {
+  margin: 10% auto;
+}
+
+@font-face {
+  font-family: 'MuseoSans', sans-serif;
+  src: url('../public/Museo_Sans_Cyrl_500.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
