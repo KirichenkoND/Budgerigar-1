@@ -58,12 +58,12 @@ type User = "Patient" | "Doctor" | "Administartor" | "";
 
 export const EditorMode: React.FC = () => {
   const [userType, setUserType] = useState("");
-  const [addDoctor, {isError, isLoading, isSuccess}] = useAddDoctorMutation();
-  // const [doctorInfo, setDoctorInfo] = useState({});
+  const [addDoctor, { isError, isLoading, isSuccess }] = useAddDoctorMutation();
+  const [specialityState, setSpecialityState] = useState<number | 0>(0);
   const [last_name, setlast_name] = useState("");
   const [first_name, setfirst_name] = useState("");
   const [middle_name, setmiddle_name] = useState("");
-  const [speciality_id, setspeciality_id] = useState("");
+  // const [speciality_id, setspeciality_id] = useState("");
   const [phone_number, setphone_number] = useState("");
   const [password, setpassword] = useState("");
   const [experience, setexperience] = useState("");
@@ -73,7 +73,7 @@ export const EditorMode: React.FC = () => {
       last_name: last_name,
       first_name: first_name,
       middle_name: middle_name,
-      speciality_id: parseInt(speciality_id),
+      speciality_id: specialityState || 0,
       phone_number: phone_number,
       password: password,
       experience: parseInt(experience)
@@ -118,19 +118,25 @@ export const EditorMode: React.FC = () => {
               />
               <label>{"Пароль:"}</label>
               <Input
+                type="password"
                 onChange={(e) => setpassword(e.target.value)}
                 value={password}
               />
               <label>{"Стаж:"}</label>
               <Input
+                type="number"
                 onChange={(e) => setexperience(e.target.value)}
+                placeholder="В полных годах"
                 value={experience}
               />
               <label>{"Специальность:"}</label>
-              <Input
-                onChange={(e) => setspeciality_id(e.target.value)}
-                value={speciality_id}
-              />
+              <select name="speciality" id="speciality" value={specialityState} onChange={(e) => {setSpecialityState(parseInt(e.target.value))}} style={{minWidth: "20vw", minHeight: "3vh"}}>
+                <option value={0} disabled> </option>
+                <option value={1}>Хирург</option>
+                <option value={2}>Ортопед</option>
+                <option value={3}>МедСестра</option>
+                <option value={4}>ЛОР</option>
+              </select>
               {/* {radioButtonUsers
                 .find((user) => userType === user.value)
                 ?.fields.map((field) => {
@@ -151,7 +157,7 @@ export const EditorMode: React.FC = () => {
                 })} */}
             </div>
           </div>
-          <Button text="Добавить" onClick={handleSendInfo}/>
+          <Button text="Добавить" onClick={handleSendInfo} />
         </div>
       </div>
     </>
