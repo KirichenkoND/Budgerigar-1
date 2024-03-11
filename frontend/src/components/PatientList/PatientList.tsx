@@ -11,10 +11,11 @@ import Input from "../../UI/Input/Input";
 import Button from "../../UI/Button/Button";
 
 const PatientList: React.FC = () => {
-  const { data, isError, isLoading, isSuccess } = useGetPatientQuery({});
   const [selectedPatient, setSelectedPatient] = useState<IGetPatients | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [credentials, setCredentials] = useState("");
   const [find, setFind] = useState("");
+  const { data, isError, isLoading, isSuccess } = useGetPatientQuery({name: credentials});
   const handlePatientToggler = useCallback((patient: IGetPatients) => {
     setSelectedPatient(patient);
     setIsPopupOpen(!isPopupOpen);
@@ -36,8 +37,8 @@ const PatientList: React.FC = () => {
       <div className="patient-list">
         <h2>Список пациентов</h2>
         <div>
-        <Input onChange={(e) => setFind(e.target.value)} value={find}/>
-        <Button text="Поиск" onClick={() => console.log(find)}/>
+          <Input onChange={(e) => setFind(e.target.value)} value={find} />
+          <Button text="Поиск" onClick={() => setCredentials(find)} />
         </div>
         {data.map((patient, index) => {
           return (

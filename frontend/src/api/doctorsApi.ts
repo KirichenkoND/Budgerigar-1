@@ -23,7 +23,7 @@ export const doctorApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
     endpoints: (builder) => ({
         getDoctors: builder.query<any, any>({
-            query: () => `/doctor`,
+            query: (credentials) => `/doctor?name=${credentials.name || ""}`,
         }),
         addDoctor: builder.mutation<any, any>({
             query: (credentials) => ({

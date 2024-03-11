@@ -38,7 +38,7 @@ export const patientApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
     endpoints: (builder) => ({
         getPatient: builder.query<TPatients, any>({
-            query: () => `/patient`,
+            query: (credentials) => `/patient?name=${credentials.name || ""}`,
         }),
         getAppointment: builder.query<TGetDiagnosis, ISendRequestDiagnosis>({
             query: (credentials) => ({

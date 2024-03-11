@@ -14,7 +14,8 @@ import DoctorShedulePopUp from "./DoctorShedulePopUp";
 import Input from "../../UI/Input/Input";
 
 const DoctorList: React.FC = () => {
-  const { data, isError, isLoading, isSuccess } = useGetDoctorsQuery({});
+  const [credentials, setCredentials] = useState("");
+  const { data, isError, isLoading, isSuccess } = useGetDoctorsQuery({name: credentials.toLowerCase()});
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | null>(null);
   const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -51,7 +52,7 @@ const DoctorList: React.FC = () => {
         <h2>Список врачей</h2>
         <div>
         <Input onChange={(e) => setFind(e.target.value)} value={find}/>
-        <Button text="Поиск" onClick={() => console.log(find)}/>
+        <Button text="Поиск" onClick={() => setCredentials(find)}/>
         </div>
         {data.map((doctor: IDoctor, index: number) => {
           return (
