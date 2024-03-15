@@ -1,11 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL } from './api';
 
-// export interface IGetDoctorsPayload {
-//     name?: string;
-//     speciality?: number;
-// }
-
 export interface IGetDoctors {
     experience?: number;
     first_name?: string;
@@ -15,8 +10,6 @@ export interface IGetDoctors {
     phone_number?: string;
     speciality_id?: number;
 }
-
-// type TDoctors = IGetDoctors[]
 
 export const doctorApi = createApi({
     reducerPath: 'doctorApi',

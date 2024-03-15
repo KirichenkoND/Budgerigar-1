@@ -10,7 +10,7 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ text = "ТЫКНИ", styleName = 'default_btn', ...OtherFields }) => {
     return (
-        <button className={styleName} {...OtherFields}>
+        <button className={styleName} {...OtherFields} disabled={OtherFields.disabled}>
             {text}
         </button>
     );
