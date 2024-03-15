@@ -163,6 +163,8 @@ pub struct Appointment {
     pub complaint: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub diagnosis: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub recomendations: Option<String>,
     #[serde(with = "time::serde::rfc3339")]
     pub created_at: OffsetDateTime,
     #[serde(with = "time::serde::rfc3339")]

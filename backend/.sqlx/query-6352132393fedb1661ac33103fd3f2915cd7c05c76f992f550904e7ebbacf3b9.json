@@ -37,6 +37,11 @@
         "ordinal": 6,
         "name": "diagnosis",
         "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "recomendations",
+        "type_info": "Text"
       }
     ],
     "parameters": {
@@ -55,6 +60,7 @@
       false,
       false,
       false,
+      true,
       true,
       true
     ]
