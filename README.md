@@ -13,10 +13,12 @@
 
 # Роли в команде <a name="Роли"></a>
 * Тимлид [Кириченко Н.Д.](https://github.com/KirichenkoND)
-* Frontend-Разработчик [Ганьшин Д.А.](https://github.com/Cooper-Farnsworth)
+* Frontend-Разработчик (Разработчик) [Кирилин Г.Д.](https://github.com/FaneOfficial)
+* Frontend-Разработчик (Дизайнер) [Ганьшин Д.А.](https://github.com/Cooper-Farnsworth)
 * Backend-Разработчик [Шустров В.Р.](https://github.com/ItsEthra)
 * Тестировщик [Мигель Д.Г.](https://github.com/DooMiaN)
 * Системный аналитик [Сафиуллин Т.И.](https://github.com/SafiullinT)
+* Системный аналитик [Григорьев Н.А.](https://github.com/5ilen)
 
 # Стек технологий <a name="Стек"></a>
 В этом проекте используется следующий стек технологий:
