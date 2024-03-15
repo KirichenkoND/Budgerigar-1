@@ -64,7 +64,6 @@ const Auth: React.FC = () => {
             <div className="sec-2">
               <Button
                 text="Авторизоваться"
-                styleName="auth_btn"
                 onClick={handleLogin}
               />
             </div>

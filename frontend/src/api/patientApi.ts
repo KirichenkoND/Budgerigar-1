@@ -38,7 +38,7 @@ export const patientApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
     endpoints: (builder) => ({
         getPatient: builder.query<TPatients, any>({
-            query: () => `/patient`,
+            query: (credentials) => `/patient?name=${credentials.name || ""}`,
         }),
         getAppointment: builder.query<TGetDiagnosis, ISendRequestDiagnosis>({
             query: (credentials) => ({
@@ -46,7 +46,14 @@ export const patientApi = createApi({
                 method: 'GET'
             }),
         }),
+        addPatient: builder.mutation<any, any>({
+            query: (credentials) => ({
+                url: '/patient',
+                method: 'POST',
+                body: credentials,
+            })
+        }),
     })
 })
 
-export const { useGetPatientQuery, useGetAppointmentQuery } = patientApi;
+export const { useGetPatientQuery, useGetAppointmentQuery, useAddPatientMutation } = patientApi;

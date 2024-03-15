@@ -9,10 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 const DoctorCard: React.FC<IDoctor> = (props) => {
     const {data, isError, isLoading, isSuccess} = useGetDoctorsSheduleQuery(props.id);
-    // const [deleteDoctor, {isError, isLoading, isSuccess}] = useDeleteDoctorMutation();
-    // const handleDeleteDoctor = () => {
-    //     deleteDoctor(credentials)
-    // }
 
     if (isError) {
         return <>не может такого быть!!!! да ты меня достал, мне не платят, а я тут пишу, распинаюс уже сил моих нет, скиньте деняк я бедный айтышнык</>

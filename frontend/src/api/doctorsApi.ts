@@ -1,11 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL } from './api';
 
-// export interface IGetDoctorsPayload {
-//     name?: string;
-//     speciality?: number;
-// }
-
 export interface IGetDoctors {
     experience?: number;
     first_name?: string;
@@ -16,14 +11,12 @@ export interface IGetDoctors {
     speciality_id?: number;
 }
 
-// type TDoctors = IGetDoctors[]
-
 export const doctorApi = createApi({
     reducerPath: 'doctorApi',
     baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
     endpoints: (builder) => ({
         getDoctors: builder.query<any, any>({
-            query: () => `/doctor`,
+            query: (credentials) => `/doctor?name=${credentials.name || ""}`,
         }),
         addDoctor: builder.mutation<any, any>({
             query: (credentials) => ({
